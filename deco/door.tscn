@@ -1,0 +1,108 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://sound/door.wav" type="AudioStream" id=1]
+[ext_resource path="res://obj/push-switch-stone.glb" type="PackedScene" id=3]
+[ext_resource path="res://obj/door-frame-stone.glb" type="PackedScene" id=4]
+[ext_resource path="res://deco/door.gd" type="Script" id=5]
+[ext_resource path="res://sound/sfx_click.mp3" type="AudioStream" id=6]
+
+[sub_resource type="Animation" id=5]
+resource_name = "Close"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 0.0647045 ),
+"update": 0,
+"values": [ Vector3( 0, 12.3, 0 ), Vector3( 0, 4.6, 0 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "Open"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1.62452, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 4.6, 0 ), Vector3( 0, 12.3, 0 ) ]
+}
+
+[sub_resource type="BoxShape" id=3]
+
+[sub_resource type="BoxShape" id=4]
+
+[node name="Spatial" type="Spatial"]
+script = ExtResource( 5 )
+
+[node name="door-frame-stone" parent="." instance=ExtResource( 4 )]
+transform = Transform( 0.31, 0, 0, 0, 0.31, 0, 0, 0, 0.15, 0, 4.7, 0.258409 )
+
+[node name="door-frame-stone2" parent="." instance=ExtResource( 4 )]
+transform = Transform( -0.31, 0, -1.31134e-08, 0, 0.31, 0, 2.71011e-08, 0, -0.15, 0, 4.7, -0.24578 )
+
+[node name="door-body" type="Spatial" parent="."]
+transform = Transform( 0.28, 0, 0, 0, 0.28, 0, 0, 0, 0.28, 0, 12.3, 0 )
+
+[node name="Anim" type="AnimationPlayer" parent="door-body"]
+anims/Close = SubResource( 5 )
+anims/Open = SubResource( 6 )
+
+[node name="push-switch-stone1" parent="." instance=ExtResource( 3 )]
+transform = Transform( 0.08, 0, 0, 0, 0.12, 0, 0, 0, 0.09, -4.31808, 5.88223, -1.36563 )
+
+[node name="switch1_area" type="Area" parent="push-switch-stone1"]
+transform = Transform( 4, 0, 0, 0, 2.4, 0, 0, 0, 0.999999, 0.111996, 1.61955, -0.657491 )
+
+[node name="CollisionShape" type="CollisionShape" parent="push-switch-stone1/switch1_area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.66948 )
+shape = SubResource( 3 )
+
+[node name="push-switch-stone2" parent="." instance=ExtResource( 3 )]
+transform = Transform( 0.08, 0, 0, 0, 0.12, 0, 0, 0, 0.09, 4.318, 5.882, 1.366 )
+
+[node name="switch2_area" type="Area" parent="push-switch-stone2"]
+transform = Transform( 4, 0, 0, 0, 2.4, 0, 0, 0, 0.999999, 0.111996, 1.61955, 4.44927 )
+
+[node name="CollisionShape" type="CollisionShape" parent="push-switch-stone2/switch2_area"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -1.66948 )
+shape = SubResource( 3 )
+
+[node name="_BlockingArea" type="Area" parent="."]
+transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 0.2, -3.15201, 5.233, -1.20664 )
+
+[node name="CollisionShape" type="CollisionShape" parent="_BlockingArea"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03639, 0 )
+shape = SubResource( 4 )
+
+[node name="_BlockingArea2" type="Area" parent="."]
+transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 0.2, 2.59166, 5.233, 1.2342 )
+
+[node name="CollisionShape" type="CollisionShape" parent="_BlockingArea2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03639, 0 )
+shape = SubResource( 4 )
+
+[node name="SfxClick" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.69652, 0 )
+stream = ExtResource( 6 )
+bus = "Reverb"
+
+[node name="Sfx" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.396, 0 )
+stream = ExtResource( 1 )
+unit_db = 15.238
+pitch_scale = 0.43
+bus = "Reverb"
+
+[connection signal="input_event" from="push-switch-stone1/switch1_area" to="." method="switch_area_input_event"]
+[connection signal="input_event" from="push-switch-stone2/switch2_area" to="." method="switch_area_input_event"]

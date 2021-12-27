@@ -1,0 +1,15 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+path="res://.import/amb_dungeon.mp3-9448e31d0299bc037476379b73ef684e.mp3str"
+
+[deps]
+
+source_file="res://sound/amb_dungeon.mp3"
+dest_files=[ "res://.import/amb_dungeon.mp3-9448e31d0299bc037476379b73ef684e.mp3str" ]
+
+[params]
+
+loop=true
+loop_offset=0

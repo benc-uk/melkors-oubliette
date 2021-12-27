@@ -1,0 +1,64 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Spatial",
+"class": "Cell",
+"language": "GDScript",
+"path": "res://cell.gd"
+}, {
+"base": "Node",
+"class": "Door",
+"language": "GDScript",
+"path": "res://deco/door.gd"
+}, {
+"base": "Spatial",
+"class": "Map",
+"language": "GDScript",
+"path": "res://map.gd"
+}, {
+"base": "Spatial",
+"class": "Splat",
+"language": "GDScript",
+"path": "res://deco/splat.gd"
+}, {
+"base": "Spatial",
+"class": "Switch",
+"language": "GDScript",
+"path": "res://switch.gd"
+} ]
+_global_script_class_icons={
+"Cell": "",
+"Door": "",
+"Map": "",
+"Splat": "",
+"Switch": ""
+}
+
+[application]
+
+config/name="Dungeon Trek"
+run/main_scene="res://main.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+global="*res://global.tscn"
+
+[display]
+
+window/vsync/use_vsync=false
+mouse_cursor/custom_image="res://textures/cursor-hand.png"
+mouse_cursor/custom_image_hotspot=Vector2( 5, 5 )
+
+[rendering]
+
+quality/filters/use_fxaa=true
+environment/default_environment="res://default_env.tres"
