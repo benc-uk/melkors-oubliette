@@ -1,0 +1,58 @@
+name: Entrance Halls
+map: |
+  OOOOOO
+  O....O     O
+  OOO..O     O
+   ..  OOOOOOO
+  OOO  O
+  OOOOOO
+  OOO
+   .
+   OOO
+
+player_start:
+  pos: [0, 0, E]
+
+doors:
+  - pos: [1, 0, W]
+  - pos: [5, 1, S]
+    type: 1
+    buttons: true
+  - pos: [5, 4, S]
+    type: 1
+
+push_switches:
+  - pos: [2, 2, E]
+    pressed:
+      target: door
+      pos: [1, 0]
+      action: toggle
+  - pos: [11, 2, E]
+    pressed:
+      target: door
+      pos: [5, 4]
+      action: open
+  - pos: [2, 4, N]
+    pressed:
+      target: map
+      action: add_cell
+      params: [1, 7]
+
+wall_furnishings:
+  - pos: [4, 0, S]
+    type: torch
+  - pos: [0, 4, W]
+    type: torch
+  - pos: [0, 6, W]
+    type: torch
+  - pos: [7, 3, S]
+    type: crates
+  - pos: [9, 3, N]
+    type: crates
+  - pos: [3, 8, E]
+    type: sign
+    message: "You found the secret scroll of\nThe evil warlock, Cheesy Nik-Nak\nYou are the winner!"
+
+center_furnishings:
+  - pos: [1, 5, N]
+    type: pillar
