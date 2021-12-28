@@ -9,6 +9,11 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "Node",
+"class": "Action",
+"language": "GDScript",
+"path": "res://action.gd"
+}, {
 "base": "Spatial",
 "class": "Cell",
 "language": "GDScript",
@@ -35,6 +40,7 @@ _global_script_classes=[ {
 "path": "res://switch.gd"
 } ]
 _global_script_class_icons={
+"Action": "",
 "Cell": "",
 "Door": "",
 "Map": "",
@@ -48,17 +54,19 @@ config/name="Dungeon Trek"
 run/main_scene="res://main.tscn"
 config/icon="res://icon.png"
 
+[audio]
+
+default_bus_layout="res://res/default_bus_layout.tres"
+
 [autoload]
 
 global="*res://global.tscn"
 
 [display]
 
-window/vsync/use_vsync=false
 mouse_cursor/custom_image="res://textures/cursor-hand.png"
 mouse_cursor/custom_image_hotspot=Vector2( 5, 5 )
 
 [rendering]
 
-quality/filters/use_fxaa=true
-environment/default_environment="res://default_env.tres"
+environment/default_environment="res://res/default_env.tres"

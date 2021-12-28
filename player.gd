@@ -11,6 +11,7 @@ var cell: Cell
 var noise: OpenSimplexNoise
 var noise2: OpenSimplexNoise
 var elapsed: float
+#var clip_cheat = true
 
 const FOOT_SFX = [
 	preload("res://sound/player_footstep01.wav"), 
@@ -75,6 +76,7 @@ func _process_input():
 			$Tween.start()
 			$Footstep.play()
 			cell = dest_cell
+			
 		if(facing == global.COMPASS.EAST):
 			var dest_cell = map.get_cell(cell.x + dir, cell.y)
 			if(dest_cell == null || !dest_cell.player_can_pass): 
@@ -84,6 +86,7 @@ func _process_input():
 			$Tween.start()
 			$Footstep.play()
 			cell = dest_cell
+			
 		if(facing == global.COMPASS.SOUTH):
 			var dest_cell = map.get_cell(cell.x, cell.y + dir)
 			if(dest_cell == null || !dest_cell.player_can_pass):
@@ -93,6 +96,7 @@ func _process_input():
 			$Tween.start()
 			$Footstep.play()
 			cell = dest_cell
+			
 		if(facing == global.COMPASS.WEST):
 			var dest_cell = map.get_cell(cell.x - dir, cell.y)
 			if(dest_cell == null || !dest_cell.player_can_pass):
@@ -102,7 +106,7 @@ func _process_input():
 			$Tween.start()
 			$Footstep.play()
 			cell = dest_cell
-		print("MOVED TO %s, %s"% [cell.x, cell.y])
+		#print("MOVED TO %s, %s"% [cell.x, cell.y])
 
 	if(Input.is_action_pressed("ui_left")):
 		turn_left()

@@ -1,10 +1,10 @@
 [gd_scene load_steps=10 format=2]
 
 [ext_resource path="res://sound/door.wav" type="AudioStream" id=1]
+[ext_resource path="res://sound/wooden_click.wav" type="AudioStream" id=2]
 [ext_resource path="res://obj/push-switch-stone.glb" type="PackedScene" id=3]
 [ext_resource path="res://obj/door-frame-stone.glb" type="PackedScene" id=4]
 [ext_resource path="res://deco/door.gd" type="Script" id=5]
-[ext_resource path="res://sound/sfx_click.mp3" type="AudioStream" id=6]
 
 [sub_resource type="Animation" id=5]
 resource_name = "Close"
@@ -94,7 +94,7 @@ shape = SubResource( 4 )
 
 [node name="SfxClick" type="AudioStreamPlayer3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.69652, 0 )
-stream = ExtResource( 6 )
+stream = ExtResource( 2 )
 bus = "Reverb"
 
 [node name="Sfx" type="AudioStreamPlayer3D" parent="."]

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/scraping-stone.wav-3f51baed7f696b8094087fab8e275403.sample"
+
+[deps]
+
+source_file="res://sound/scraping-stone.wav"
+dest_files=[ "res://.import/scraping-stone.wav-3f51baed7f696b8094087fab8e275403.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0
