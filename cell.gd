@@ -6,19 +6,27 @@ var player_can_pass: bool
 var x: int
 var y: int
 
-var center_furnishing = null
-var wall_furnishings = [null, null, null, null]
+var center_detail = null
+var wall_details = [null, null, null, null]
 var door = null
 
-const WALL_FURN = {
+const WALL_DETAILS = {
 	"torch": preload("res://deco/torch.tscn"),
+	
+	# Cosmetic
 	"crates": preload("res://deco/crates.tscn"),
+	"pipe-hole": preload("res://deco/pipe-hole.tscn"),
+	"rubble": preload("res://deco/rubble.tscn"),
+	
+	# Activators
 	"sign": preload("res://deco/sign.tscn"),
 	"push-switch": preload("res://deco/push-switch.tscn"),
+	"lever": preload("res://deco/lever.tscn"),
 }
 
-const CENTER_FURN = {
-	"pillar": preload("res://deco/pillar.tscn")
+const CENTER_DETAILS = {
+	"pillar": preload("res://deco/pillar.tscn"),
+	"stone-block": preload("res://deco/stone-block.tscn")
 }
 
 const DOOR = preload("res://deco/door.tscn")
@@ -35,28 +43,35 @@ func _ready() -> void:
 func remove_wall(wall_facing: int) -> void:
 	get_node("wall-%d" % wall_facing).queue_free()
 
-func add_wall_furnishing(name: String, direction: int = global.COMPASS.NORTH):
-	if wall_furnishings[direction] != null or door != null: 
+func add_wall_detail(name: String, direction: int = global.COMPASS.NORTH):
+	if wall_details[direction] != null or door != null: 
 		print("Illegal placement of ", name, " at ", x, ", ", y)
 		return
-	var furn: Spatial = WALL_FURN[name].instance()
-	add_child(furn)
-	furn.rotate_y(global.DIRECTIONS[direction])
-	wall_furnishings[direction] = furn
-	return furn
+	var detail: Spatial = WALL_DETAILS[name].instance()
+	add_child(detail)
+	detail.rotate_y(global.DIRECTIONS[direction])
+	wall_details[direction] = detail
+	return detail
 
-func add_center_furnishing(name: String, direction: int = global.COMPASS.NORTH):
-	if center_furnishing != null or door != null: 
+func add_center_detail(name: String, direction: int = global.COMPASS.NORTH):
+	if center_detail != null or door != null: 
 		print("Illegal placement of ", name, " at ", x, ", ", y)
 		return
-	center_furnishing = CENTER_FURN[name].instance()
+	center_detail = CENTER_DETAILS[name].instance()
 	player_can_pass = false
-	add_child(center_furnishing)
-	center_furnishing.rotate_y(global.DIRECTIONS[direction])
-	return center_furnishing
+	add_child(center_detail)
+	center_detail.rotate_y(global.DIRECTIONS[direction])
+	return center_detail
+
+func remove_center_detail():
+	if center_detail == null: return
+	
+	center_detail.queue_free()
+	player_can_pass = true
+	center_detail = null
 	
 func add_door(direction: int, type: int = Door.types.WOOD, open: bool = true, buttons: bool = true):
-	if center_furnishing != null or door != null:
+	if center_detail != null or door != null:
 		print("Illegal placement of door at ", x, ", ", y)
 		return
 	door = DOOR.instance()
@@ -79,6 +94,14 @@ func add_splat():
 	splat.translation.z += (randf()* global.HALF_CELL_SIZE) - global.HALF_CELL_SIZE
 	add_child(splat)
 
+func play_sound(filename: String):
+	var sfx = AudioStreamPlayer3D.new()
+	sfx.unit_db = 20
+	sfx.stream = load("res://sound/"+filename)
+	add_child(sfx)
+	sfx.play()
+	pass
+	
 func to_string():
 	return "x: "+str(x)+", y:"+str(y)
 	

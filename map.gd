@@ -21,6 +21,10 @@ func add_cell(x: int, y: int) -> void:
 	if x > width - 1 or y > height - 1:
 		return
 
+	if get_cell(x, y) != null:
+		print("warning, cell already exists at: ", x, ",", y)
+		return 
+		
 	var cell = CELL_SCENE.instance()
 
 	var check_cell := get_cell(x + 1, y)
@@ -64,12 +68,11 @@ func parse_level(level: Dictionary):
 	var y = 0
 	for map_line in map_array:
 		x = 0
-		# Comment lines can start with "'"
+		# Comment lines can start with '
 		if map_line.substr(0,1) == "'": continue
 		for map_cell in map_line:
 			match map_cell:
-				"#": add_cell(x, y)
-				"O": add_cell(x, y)
+				"#", "O", "*", "0", "@": add_cell(x, y)
 			x = x + 1
 		y = y + 1
 	
@@ -79,41 +82,56 @@ func parse_level(level: Dictionary):
 			var type = Door.types.WOOD if !door.has("type") else door.type
 			var open = false if !door.has("open") else door.open
 			var buttons = false if !door.has("buttons") else door.buttons
-			get_cell(door.pos[0], door.pos[1]).add_door(dir, type, open, buttons)
-
-	if level.has("push_switches"):
-		for switch in level.push_switches:
-			var dir = global.stringToCompass(switch.pos[2])
-			var cell = get_cell(switch.pos[0], switch.pos[1])
-			var switch_node
-			if cell != null:
-				switch_node = cell.add_wall_furnishing("push-switch", dir)
+			var target_cell = get_cell(door.pos[0], door.pos[1])
+			if target_cell != null: target_cell.add_door(dir, type, open, buttons)
 			else:
-				print("Error in parse_level! Tried to place push_switch in null cell: ", switch.pos[0], ",", switch.pos[1])
-				return
+				print("Error in parse_level! Tried to add a door in a null cell: ",door.pos[0], ",", door.pos[1])
 
-			if switch.has("pressed"):
-				if switch.pressed.target.to_lower() == "door":
-					switch_node.action = Action.new(get_cell(switch.pressed.pos[0], switch.pressed.pos[1]).door, switch.pressed.action)
-				if switch.pressed.target.to_lower() == "map":
-					switch_node.action = Action.new($"/root/Main/Map", switch.pressed.action, switch.pressed.params)
-				
-	if level.has("wall_furnishings"):
-		for furn in level.wall_furnishings:
-			var dir = global.stringToCompass(furn.pos[2])
-			var cell = get_cell(furn.pos[0], furn.pos[1])
+	if level.has("activators"):
+		for act in level.activators:
+			var dir = global.stringToCompass(act.pos[2])
+			var cell = get_cell(act.pos[0], act.pos[1])
+			var node
 			if cell != null:
-				var furn_node = cell.add_wall_furnishing(furn.type, dir)
-				if furn.type == "sign" && furn.has("message"): furn_node.message = furn.message
+				match act.type:
+					"push": node = cell.add_wall_detail("push-switch", dir)
+					"lever": node = cell.add_wall_detail("lever", dir)
+					_: 
+						print("Error in parse_level! Invalid activator type")
+						continue
+				if act.has("states"):
+					if act.states.has("activated"):
+						for activated_action in act.states.activated:
+							var action = Action.new()
+							action.parse(activated_action, self)
+							node.actions[Activator.ACTIVE].append(action)
+					if act.states.has("deactivated"):
+						for deactivated_action in act.states.deactivated:
+							var action = Action.new()
+							action.parse(deactivated_action, self)
+							node.actions[Activator.INACTIVE].append(action)
 			else:
-				print("Error in parse_level! Tried to place wall_furnishing in null cell: ", furn.pos[0], ",", furn.pos[1])
+				print("Error in parse_level! Tried to place activators in null cell: ", act.pos[0], ",", act.pos[1])
+				continue
 
-	if level.has("center_furnishings"):
-		for furn in level.center_furnishings:
-			var dir = global.stringToCompass(furn.pos[2])
-			var cell = get_cell(furn.pos[0], furn.pos[1])
+	if level.has("wall_details"):
+		for detail in level.wall_details:
+			var dir = global.stringToCompass(detail.pos[2])
+			var cell = get_cell(detail.pos[0], detail.pos[1])
 			if cell != null:
-				cell.add_center_furnishing(furn.type, dir)
+				var detail_node = cell.add_wall_detail(detail.type, dir)
+
+				if detail.type == "sign" && detail.has("message"): 
+					detail_node.set_message(detail.message)
 			else:
-				print("Error in parse_level! Tried to place center_furnishing in null cell: ", furn.pos[0], ",", furn.pos[1])
+				print("Error in parse_level! Tried to place wall_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
+
+	if level.has("center_details"):
+		for detail in level.center_details:
+			var dir = global.stringToCompass(detail.pos[2])
+			var cell = get_cell(detail.pos[0], detail.pos[1])
+			if cell != null:
+				cell.add_center_detail(detail.type, dir)
+			else:
+				print("Error in parse_level! Tried to place center_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
 

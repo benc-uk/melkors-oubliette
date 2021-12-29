@@ -2,12 +2,12 @@
 
 importer="scene"
 type="PackedScene"
-path="res://.import/push-switch-stone.glb-db68ec41567d1eb1d0c7db262e6d6b98.scn"
+path="res://.import/pipe-hole.glb-e56ca49a5e70e41d419ed6ecbc4236f5.scn"
 
 [deps]
 
-source_file="res://obj/push-switch-stone.glb"
-dest_files=[ "res://.import/push-switch-stone.glb-db68ec41567d1eb1d0c7db262e6d6b98.scn" ]
+source_file="res://obj/pipe-hole.glb"
+dest_files=[ "res://.import/pipe-hole.glb-e56ca49a5e70e41d419ed6ecbc4236f5.scn" ]
 
 [params]
 

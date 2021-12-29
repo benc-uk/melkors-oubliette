@@ -1,9 +1,4 @@
-extends Switch
+extends Activator
 
-var message =  "I'm Jimmy Placeholder"
-
-func _on_Area_input_event(camera, event, position, normal, shape_idx):
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			$"/root/Main".show_message(message, 8)
-			
+func set_message(msg: String):
+	actions[Activator.ACTIVE].append(Action.new($"/root/main", "show_message", [msg, 8]))

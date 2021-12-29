@@ -21,10 +21,10 @@ const FOOT_SFX = [
 ]
 
 func _ready():
-	map = get_node("../Map")
-	$Camera.translate(Vector3(0, CAM_HEIGHT, CAM_BACK))
-	$Torch.translate(Vector3(0, CAM_HEIGHT, 0))
-	$Torch2.translate(Vector3(0, CAM_HEIGHT, 0))
+	map = get_node("../map")
+	$camera.translate(Vector3(0, CAM_HEIGHT, CAM_BACK))
+	$torch_far.translate(Vector3(0, CAM_HEIGHT, 0))
+	$torch_near.translate(Vector3(0, CAM_HEIGHT, 0))
 	
 	noise = OpenSimplexNoise.new()
 	noise.seed = randi()
@@ -43,21 +43,21 @@ func _process(delta):
 	
 	# Fake flame/flicker, move light randomly and alter light brightness
 	var light_modifier = (noise.get_noise_1d(elapsed) + 1) / 2
-	$Torch.light_energy = light_modifier * 8
+	$torch_far.light_energy = light_modifier * 8
 	var new_height = CAM_HEIGHT + noise2.get_noise_1d(elapsed) * 1.5
 	var new_x = 0 + noise2.get_noise_1d(elapsed + 1000) * 0.5
-	$Torch2.translation.y = new_height
-	$Torch2.translation.x = new_x
-	$Torch.translation.y = new_height
-	$Torch.translation.x = new_x
+	$torch_near.translation.y = new_height
+	$torch_near.translation.x = new_x
+	$torch_far.translation.y = new_height
+	$torch_far.translation.x = new_x
 	
 func _process_input():
 	# Can't interupt movement
-	if($Tween.is_active()):
+	if($mover.is_active()):
 		return
 
-	$Footstep.pitch_scale = 0.6 + randf() * 0.7
-	$Footstep.stream = FOOT_SFX[randi() % 4]
+	$"sfx-footstep".pitch_scale = 0.6 + randf() * 0.7
+	$"sfx-footstep".stream = FOOT_SFX[randi() % 4]
 	
 	# Resnap roation is just a precaution in case of float drift
 	rotation.y = global.DIRECTIONS[facing]
@@ -72,9 +72,9 @@ func _process_input():
 			if(dest_cell == null || !dest_cell.player_can_pass): 
 				grunt()
 				return
-			$Tween.interpolate_property(self, "translation:z", translation.z, translation.z - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			$Footstep.play()
+			$mover.interpolate_property(self, "translation:z", translation.z, translation.z - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$mover.start()
+			$"sfx-footstep".play()
 			cell = dest_cell
 			
 		if(facing == global.COMPASS.EAST):
@@ -82,9 +82,9 @@ func _process_input():
 			if(dest_cell == null || !dest_cell.player_can_pass): 
 				grunt()
 				return
-			$Tween.interpolate_property(self, "translation:x", translation.x, translation.x + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			$Footstep.play()
+			$mover.interpolate_property(self, "translation:x", translation.x, translation.x + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$mover.start()
+			$"sfx-footstep".play()
 			cell = dest_cell
 			
 		if(facing == global.COMPASS.SOUTH):
@@ -92,9 +92,9 @@ func _process_input():
 			if(dest_cell == null || !dest_cell.player_can_pass):
 				grunt()
 				return
-			$Tween.interpolate_property(self, "translation:z", translation.z, translation.z + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			$Footstep.play()
+			$mover.interpolate_property(self, "translation:z", translation.z, translation.z + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$mover.start()
+			$"sfx-footstep".play()
 			cell = dest_cell
 			
 		if(facing == global.COMPASS.WEST):
@@ -102,21 +102,21 @@ func _process_input():
 			if(dest_cell == null || !dest_cell.player_can_pass):
 				grunt()
 				return
-			$Tween.interpolate_property(self, "translation:x", translation.x, translation.x - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$Tween.start()
-			$Footstep.play()
+			$mover.interpolate_property(self, "translation:x", translation.x, translation.x - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+			$mover.start()
+			$"sfx-footstep".play()
 			cell = dest_cell
 		#print("MOVED TO %s, %s"% [cell.x, cell.y])
 
 	if(Input.is_action_pressed("ui_left")):
 		turn_left()
-		$Tween.interpolate_property(self, "rotation:y", rotation.y, rotation.y+PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-		$Tween.start()
+		$mover.interpolate_property(self, "rotation:y", rotation.y, rotation.y+PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$mover.start()
 
 	if(Input.is_action_pressed("ui_right")):
 		turn_right()
-		$Tween.interpolate_property(self, "rotation:y", rotation.y, rotation.y-PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-		$Tween.start()
+		$mover.interpolate_property(self, "rotation:y", rotation.y, rotation.y-PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		$mover.start()
 
 #
 # Instantly move (teleport) to given cell
@@ -152,6 +152,6 @@ func turn_right():
 
 
 func grunt():
-	if $Grunt.playing: return
-	$Grunt.pitch_scale = 0.7 + randf() * 0.2
-	$Grunt.play()
+	if $"sfx-grunt".playing: return
+	$"sfx-grunt".pitch_scale = 0.7 + randf() * 0.2
+	$"sfx-grunt".play()

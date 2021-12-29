@@ -18,32 +18,36 @@ func _ready() -> void:
 	if not has_buttons:
 		get_node("push-switch-stone1").queue_free()
 		get_node("push-switch-stone2").queue_free()
-	if not opened:
+	if opened:
+		get_parent().player_can_pass = true
+		$"door-body/anim".play("open", -1, 4)
+	else:
 		get_parent().player_can_pass = false
-		opened = false
-		$"door-body/Anim".play("Close", -1, 4)
+		$"door-body/anim".play("close", -1, 4)
 
 func open() -> void:
 	if opened: return
 	get_parent().player_can_pass = true
 	opened = true
-	$"door-body/Anim".play("Open")
-	$"Sfx".play()
-	$"SfxClick".play()
+	$"door-body/anim".play("open")
+	$"sfx-door".play()
+	$"sfx-click".play()
 
 func close() -> void:
 	if not opened: return
 	get_parent().player_can_pass = false
 	opened = false
-	$"door-body/Anim".play("Close")
-	$"Sfx".play()
-	$"SfxClick".play()
+	$"door-body/anim".play("close")
+	$"sfx-door".play()
+	$"sfx-click".play()
 
 func toggle() -> void:
 	if opened: close()
 	else: open()
 	
-func switch_area_input_event(camera, event, position, normal, shape_idx):
+func click_handler(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			$"push-switch-stone1/anim".play("activate")
+			$"push-switch-stone2/anim".play("activate")
 			toggle()
