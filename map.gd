@@ -17,13 +17,13 @@ func _ready():
 		for _x in range(width):
 			cells[y].append(null)
 
-func add_cell(x: int, y: int) -> void:
+func add_cell(x: int, y: int) -> Cell:
 	if x > width - 1 or y > height - 1:
-		return
+		return null
 
 	if get_cell(x, y) != null:
 		print("warning, cell already exists at: ", x, ",", y)
-		return 
+		return null
 		
 	var cell = CELL_SCENE.instance()
 
@@ -53,6 +53,7 @@ func add_cell(x: int, y: int) -> void:
 	cell.x = x
 	cell.y = y
 	add_child(cell)
+	return cell
 
 func get_cell(x: int, y: int) -> Cell:
 	if x < 0 or y < 0:
@@ -73,6 +74,9 @@ func parse_level(level: Dictionary):
 		for map_cell in map_line:
 			match map_cell:
 				"#", "O", "*", "0", "@": add_cell(x, y)
+				"x", "X": 
+					add_cell(x, y)
+					get_cell(x, y).open_pit()
 			x = x + 1
 		y = y + 1
 	

@@ -9,11 +9,13 @@ script = ExtResource( 1 )
 
 [node name="camera" type="Camera" parent="."]
 transform = Transform( 1, 0, 0, 0, 0.965926, 0.258819, 0, -0.258819, 0.965926, 0, 0, 2 )
+current = true
 fov = 75.0
 
 [node name="torch_far" type="OmniLight" parent="."]
 light_energy = 6.0
 shadow_enabled = true
+shadow_bias = 0.48
 omni_range = 50.0
 omni_attenuation = 5.09824
 
@@ -22,6 +24,7 @@ light_color = Color( 0.909804, 0.521569, 0.0705882, 1 )
 light_energy = 16.0
 light_bake_mode = 0
 shadow_enabled = true
+shadow_bias = 0.733
 omni_range = 10.0
 omni_attenuation = 0.535888
 

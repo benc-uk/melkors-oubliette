@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/zughy-32-32x.png-a66e7197579a473ed4c5623746dad835.stex"
+path="res://.import/cursor-hand.png-6e13d35a83a9ebda38affd9147b1e345.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://etc/zughy-32-32x.png"
-dest_files=[ "res://.import/zughy-32-32x.png-a66e7197579a473ed4c5623746dad835.stex" ]
+source_file="res://hud/cursor-hand.png"
+dest_files=[ "res://.import/cursor-hand.png-6e13d35a83a9ebda38affd9147b1e345.stex" ]
 
 [params]
 

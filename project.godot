@@ -64,9 +64,14 @@ global="*res://global.tscn"
 
 [display]
 
-mouse_cursor/custom_image="res://textures/cursor-hand.png"
-mouse_cursor/custom_image_hotspot=Vector2( 5, 5 )
+mouse_cursor/custom_image="res://hud/cursor-hand.png"
+mouse_cursor/custom_image_hotspot=Vector2( 2, 2 )
+
+[global]
+
+cursor=false
 
 [rendering]
 
+quality/filters/use_fxaa=true
 environment/default_environment="res://res/default_env.tres"

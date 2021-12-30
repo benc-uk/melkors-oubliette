@@ -9,6 +9,7 @@ var y: int
 var center_detail = null
 var wall_details = [null, null, null, null]
 var door = null
+var is_pit = false
 
 const WALL_DETAILS = {
 	"torch": preload("res://deco/torch.tscn"),
@@ -35,14 +36,30 @@ const SPLAT = preload("res://deco/splat.tscn")
 func _ready() -> void:
 	player_can_pass = true
 	randomize()
-	if randf() > 0.4:
-		add_splat()
-	if randf() > 0.9:
-		add_splat()
+	if not is_pit:
+		if randf() > 0.4:
+			add_splat()
+		if randf() > 0.9:
+			add_splat()
+	else:
+		$floor.queue_free()
+		$pit.visible = true
 		
 func remove_wall(wall_facing: int) -> void:
 	get_node("wall-%d" % wall_facing).queue_free()
 
+func open_pit():
+	is_pit = true
+	player_can_pass = false
+	$floor.visible = false
+	$pit.visible = true
+	
+func close_pit():
+	is_pit = false
+	player_can_pass = true
+	$floor.visible = true
+	$pit.visible = false
+		
 func add_wall_detail(name: String, direction: int = global.COMPASS.NORTH):
 	if wall_details[direction] != null or door != null: 
 		print("Illegal placement of ", name, " at ", x, ", ", y)
