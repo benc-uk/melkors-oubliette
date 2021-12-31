@@ -4,6 +4,13 @@ export var CAM_HEIGHT = 6.5
 export var CAM_BACK = 3
 export var TURN_SPEED = 0.3
 export var MOVE_SPEED = 0.4
+export var NEAR_LIGHT_ENERGY = 10
+
+# Light scaling
+export var LIGHT_SCALE = 1.0
+const LIGHT_DECAY_SPEED = 30
+# Set to 1.0 to disable
+const LIGHT_DECAY_AMOUNT = 1.0
 
 var facing
 var map: Map
@@ -12,6 +19,7 @@ var noise: OpenSimplexNoise
 var noise2: OpenSimplexNoise
 var elapsed: float
 var clip_cheat = true
+var ticks = 0
 
 const FOOT_SFX = [
 	preload("res://sound/player_footstep01.wav"), 
@@ -21,7 +29,6 @@ const FOOT_SFX = [
 ]
 
 func _ready():
-	#get_tree().get_root().tr
 	map = get_node("/root/main/map")
 	$camera.translate(Vector3(0, CAM_HEIGHT, CAM_BACK))
 	$torch_far.translate(Vector3(0, CAM_HEIGHT, 0))
@@ -39,12 +46,17 @@ func _ready():
 	elapsed = 0
 
 func _process(delta):
+	ticks = ticks + 1
+	if ticks > LIGHT_DECAY_SPEED:
+		ticks = 0
+		LIGHT_SCALE = LIGHT_SCALE / LIGHT_DECAY_AMOUNT
 	_process_input()
 	elapsed = elapsed + delta
 	
 	# Fake flame/flicker, move light randomly and alter light brightness
 	var light_modifier = (noise.get_noise_1d(elapsed) + 1) / 2
-	$torch_far.light_energy = light_modifier * 8
+	$torch_far.light_energy = (light_modifier * 8 * LIGHT_SCALE)
+	$torch_near.light_energy = NEAR_LIGHT_ENERGY * LIGHT_SCALE
 	var new_height = CAM_HEIGHT + noise2.get_noise_1d(elapsed) * 1.5
 	var new_x = 0 + noise2.get_noise_1d(elapsed + 1000) * 0.5
 	$torch_near.translation.y = new_height

@@ -1,0 +1,20 @@
+name: The Oubliette
+map: |
+  OO OOOO
+  OO
+
+player_start:
+  pos: [0, 0, E]
+
+activators:
+  - type: push
+    pos: [1, 1, S]
+    states:
+      activated:
+        - { type: remove_wall, pos: [2, 0] }
+        - { type: play_sound, pos: [1, 0], param: scraping-stone.wav }
+
+wall_details:
+  - pos: [0, 0, N]
+    type: sign
+    message: "You will never escape!\nYou will die down here in the oubliette!"

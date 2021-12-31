@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/NormalMap2.png-4be4640806320eb87e61458c942478db.stex"
+path="res://.import/main-menu-bg.png-2b2184bc79802036d5b4958f46bfc442.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://textures/NormalMap2.png"
-dest_files=[ "res://.import/NormalMap2.png-4be4640806320eb87e61458c942478db.stex" ]
+source_file="res://hud/main-menu-bg.png"
+dest_files=[ "res://.import/main-menu-bg.png-2b2184bc79802036d5b4958f46bfc442.stex" ]
 
 [params]
 
@@ -20,7 +20,7 @@ compress/hdr_mode=0
 compress/bptc_ldr=0
 compress/normal_map=0
 flags/repeat=0
-flags/filter=true
+flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
 flags/srgb=2
@@ -31,5 +31,5 @@ process/invert_color=false
 process/normal_map_invert_y=false
 stream=false
 size_limit=0
-detect_3d=true
+detect_3d=false
 svg/scale=1.0

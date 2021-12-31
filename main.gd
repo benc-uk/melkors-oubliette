@@ -2,6 +2,7 @@ extends Spatial
 
 var yaml_parser
 var player
+var level_file = "level-1.yaml"
 
 func _init():
 	yaml_parser = preload("res://addons/godot-yaml/gdyaml.gdns").new()
@@ -9,11 +10,11 @@ func _init():
 func _ready():
 	player = find_node("player")
 	var file = File.new()
-	if !file.file_exists("user://level-1.yaml"): 
-		get_tree().paused = true
-		print("Could not load level-1.yaml, sorry!")
+	if !file.file_exists(global.level_file_name): 
+		print("Could not load ", global.level_file_name, ", sorry!")
+		get_tree().change_scene("res://main-menu.tscn")
 		return
-	file.open("user://level-1.yaml", File.READ)
+	file.open(global.level_file_name, File.READ)
 	var level = yaml_parser.parse(file.get_as_text())
 	file.close() 
 	$map.parse_level(level)

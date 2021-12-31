@@ -21,7 +21,7 @@ omni_attenuation = 5.09824
 
 [node name="torch_near" type="OmniLight" parent="."]
 light_color = Color( 0.909804, 0.521569, 0.0705882, 1 )
-light_energy = 16.0
+light_energy = 10.0
 light_bake_mode = 0
 shadow_enabled = true
 shadow_bias = 0.733

@@ -45,6 +45,9 @@ func _ready():
 func click_handler(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			if $"/root/main/player".cell != get_parent():
+				return
+			
 			if not toggle:
 				activated()
 				if anim_node != null: anim_node.queue("deactivate")

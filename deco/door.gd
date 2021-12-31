@@ -48,6 +48,9 @@ func toggle() -> void:
 func click_handler(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			if $"/root/main/player".cell != get_parent():
+				return
+				
 			$"push-switch-stone1/anim".play("activate")
 			$"push-switch-stone2/anim".play("activate")
 			toggle()
