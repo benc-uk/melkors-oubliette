@@ -20,5 +20,3 @@ func stringToCompass(compass_str) -> int:
 		"S": return COMPASS.SOUTH
 		"W": return COMPASS.WEST
 		_: return COMPASS.NORTH 
-
-var level_file_name = "fffffffffffff"

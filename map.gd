@@ -10,7 +10,7 @@ var cells
 
 const CELL_SCENE = preload("res://cell.tscn")
 
-func _ready():
+func _init():
 	cells = []
 	for y in range(height):
 		cells.append([])
@@ -22,7 +22,7 @@ func add_cell(x: int, y: int) -> Cell:
 		return null
 
 	if get_cell(x, y) != null:
-		print("warning, cell already exists at: ", x, ",", y)
+		print("### add_cell warning, cell already exists at: ", x, ",", y)
 		return null
 		
 	var cell = CELL_SCENE.instance()
@@ -89,7 +89,7 @@ func parse_level(level: Dictionary):
 			var target_cell = get_cell(door.pos[0], door.pos[1])
 			if target_cell != null: target_cell.add_door(dir, type, open, buttons)
 			else:
-				print("Error in parse_level! Tried to add a door in a null cell: ",door.pos[0], ",", door.pos[1])
+				print("### Parse error: Tried to add a door in a null cell: ",door.pos[0], ",", door.pos[1])
 
 	if level.has("activators"):
 		for act in level.activators:
@@ -101,7 +101,7 @@ func parse_level(level: Dictionary):
 					"push": node = cell.add_wall_detail("push-switch", dir)
 					"lever": node = cell.add_wall_detail("lever", dir)
 					_: 
-						print("Error in parse_level! Invalid activator type")
+						print("### Parse error: Invalid activator type")
 						continue
 				if act.has("states"):
 					if act.states.has("activated"):
@@ -115,7 +115,7 @@ func parse_level(level: Dictionary):
 							action.parse(deactivated_action, self)
 							node.actions[Activator.INACTIVE].append(action)
 			else:
-				print("Error in parse_level! Tried to place activators in null cell: ", act.pos[0], ",", act.pos[1])
+				print("### Parse error: Tried to place activators in null cell: ", act.pos[0], ",", act.pos[1])
 				continue
 
 	if level.has("wall_details"):
@@ -128,7 +128,7 @@ func parse_level(level: Dictionary):
 				if detail.type == "sign" && detail.has("message"): 
 					detail_node.set_message(detail.message)
 			else:
-				print("Error in parse_level! Tried to place wall_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
+				print("### Parse error: Tried to place wall_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
 
 	if level.has("center_details"):
 		for detail in level.center_details:
@@ -137,5 +137,5 @@ func parse_level(level: Dictionary):
 			if cell != null:
 				cell.add_center_detail(detail.type, dir)
 			else:
-				print("Error in parse_level! Tried to place center_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
+				print("### Parse error: Tried to place center_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
 

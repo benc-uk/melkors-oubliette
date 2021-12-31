@@ -20,13 +20,13 @@ func _init(targ: Node = null, fn: String = "noop", param = [], sfx = ""):
 	
 func execute():
 	if target == null:
-		print("Action has no target set")
+		print("### Action execution error: no target set")
 		return
 	if function == null || function == "":
-		print("Action on ",target, "has no function set")
+		print("### Action execution error: ", target, " has no function set")
 		return
 		
-	print("executing action ", function, " on ", target)
+	print("+++ Executing action ", function, " on ", target)
 		
 	if params.size() > 0:
 		target.callv(function, params)
@@ -35,20 +35,20 @@ func execute():
 
 func parse(input: Dictionary, map):
 	if !input.has("type"): 
-		print("Failed to parse action, type is missing")
+		print("### Parse error: Failed to parse action, type is missing")
 		return
 		
 	var target_cell = null
 	if input.has("pos"):
 		target_cell = map.get_cell(input.pos[0], input.pos[1])
 		if target_cell == null && input.type != TYPE_REMOVE_WALL:
-			print("Action targets a null cell: ",input.pos[0], ",", input.pos[1])
+			print("### Parse error: Action targets a null cell: ",input.pos[0], ",", input.pos[1])
 			return
 			
 	match input.type:
 		TYPE_DOOR:
 			if target_cell.door == null: 
-				print("Door action targets cell without door: ",input.pos[0], ",", input.pos[1])
+				print("### Parse error: Door action targets cell without door: ",input.pos[0], ",", input.pos[1])
 				return
 			if ["open", "close", "toggle"].has(input.param):
 				target = target_cell.door
@@ -69,5 +69,5 @@ func parse(input: Dictionary, map):
 			function = "play_sound"
 			params = [input.param]
 		_: 
-			print("Action is not a recognized type")
+			print("### Parse error: Action is not a recognized type")
 			return

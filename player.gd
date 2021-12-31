@@ -29,7 +29,7 @@ const FOOT_SFX = [
 ]
 
 func _ready():
-	map = get_node("/root/main/map")
+	#map = get_node("/root/main/map")
 	$camera.translate(Vector3(0, CAM_HEIGHT, CAM_BACK))
 	$torch_far.translate(Vector3(0, CAM_HEIGHT, 0))
 	$torch_near.translate(Vector3(0, CAM_HEIGHT, 0))
@@ -75,6 +75,9 @@ func _process_input():
 	# Resnap roation is just a precaution in case of float drift
 	rotation.y = global.DIRECTIONS[facing]
 
+	if Input.is_action_pressed("ui_cancel"):
+		$"/root/main/pause_popup".show()
+
 	if(Input.is_action_pressed("ui_up") or Input.is_action_pressed("ui_down")):
 		var dir = 1
 		if(Input.is_action_pressed("ui_down")):
@@ -119,7 +122,8 @@ func _process_input():
 			$mover.start()
 			$"sfx-footstep".play()
 			cell = dest_cell
-		#print("MOVED TO %s, %s"% [cell.x, cell.y])
+		
+		print("+++ Player moved to: %s, %s"% [cell.x, cell.y])
 
 	if(Input.is_action_pressed("ui_left")):
 		turn_left()

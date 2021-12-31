@@ -42,6 +42,7 @@ func _ready():
 	if active: 
 		if anim_node != null: anim_node.play("activate")
 	
+	
 func click_handler(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
@@ -60,7 +61,6 @@ func activated():
 	
 	active = true
 	emit_signal("activated")
-	print("anim_node,",anim_node)
 	if sfx_activate_node != null: sfx_activate_node.play()
 	if anim_node != null: anim_node.play("activate")
 	for action in actions[ACTIVE]:

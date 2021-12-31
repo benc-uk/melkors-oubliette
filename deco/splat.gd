@@ -16,11 +16,10 @@ func _ready():
 	var size = min_size + randf() * (max_size - min_size)
 	scale.x = size
 	scale.z = size
-	var mat = $Splat.get_surface_material(0).duplicate()
+	var mat = $mesh.get_surface_material(0).duplicate()
 	mat.albedo_color = Color(color_r, color_g, color_b)
 	mat.albedo_color.a = min_alpha + randf() * (max_alpha - min_alpha)
-	$Splat.set_surface_material(0, mat)
-	pass 
+	$mesh.set_surface_material(0, mat)
 
 func blood():
 	color_r = 0.76

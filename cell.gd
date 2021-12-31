@@ -36,14 +36,11 @@ const SPLAT = preload("res://deco/splat.tscn")
 func _ready() -> void:
 	player_can_pass = true
 	randomize()
-	if not is_pit:
-		if randf() > 0.4:
-			add_splat()
-		if randf() > 0.9:
-			add_splat()
-	else:
-		$floor.queue_free()
-		$pit.visible = true
+	if randf() > 0.1:
+		add_splat()
+	if randf() > 0.1:
+		add_splat()
+
 		
 func remove_wall(wall_facing: int) -> void:
 	get_node("wall-%d" % wall_facing).queue_free()
@@ -62,7 +59,7 @@ func close_pit():
 		
 func add_wall_detail(name: String, direction: int = global.COMPASS.NORTH):
 	if wall_details[direction] != null or door != null: 
-		print("Illegal placement of ", name, " at ", x, ", ", y)
+		print("### Cell warning: Illegal placement of ", name, " at ", x, ", ", y)
 		return
 	var detail: Spatial = WALL_DETAILS[name].instance()
 	add_child(detail)
@@ -72,7 +69,7 @@ func add_wall_detail(name: String, direction: int = global.COMPASS.NORTH):
 
 func add_center_detail(name: String, direction: int = global.COMPASS.NORTH):
 	if center_detail != null or door != null: 
-		print("Illegal placement of ", name, " at ", x, ", ", y)
+		print("### Cell warning: Illegal placement of ", name, " at ", x, ", ", y)
 		return
 	center_detail = CENTER_DETAILS[name].instance()
 	player_can_pass = false
@@ -89,7 +86,7 @@ func remove_center_detail():
 	
 func add_door(direction: int, type: int = Door.types.WOOD, open: bool = true, buttons: bool = true):
 	if center_detail != null or door != null:
-		print("Illegal placement of door at ", x, ", ", y)
+		print("### Cell warning: Illegal placement of door at ", x, ", ", y)
 		return
 	door = DOOR.instance()
 	door.type = type
@@ -109,7 +106,7 @@ func add_splat():
 	if type == 3: splat.grey()
 	splat.translation.x += (randf()* global.HALF_CELL_SIZE) - global.HALF_CELL_SIZE
 	splat.translation.z += (randf()* global.HALF_CELL_SIZE) - global.HALF_CELL_SIZE
-	add_child(splat)
+	$floor.add_child(splat)
 
 func play_sound(filename: String):
 	var sfx = AudioStreamPlayer3D.new()
