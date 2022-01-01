@@ -29,23 +29,23 @@ func add_cell(x: int, y: int) -> Cell:
 
 	var check_cell := get_cell(x + 1, y)
 	if check_cell != null:
-		cell.remove_wall(global.COMPASS.WEST)
-		check_cell.remove_wall(global.COMPASS.EAST)
-		
-	check_cell = get_cell(x - 1, y)
-	if check_cell != null:
 		cell.remove_wall(global.COMPASS.EAST)
 		check_cell.remove_wall(global.COMPASS.WEST)
 		
-	check_cell = get_cell(x, y + 1)
+	check_cell = get_cell(x - 1, y)
 	if check_cell != null:
-		cell.remove_wall(global.COMPASS.NORTH)
-		check_cell.remove_wall(global.COMPASS.SOUTH)
+		cell.remove_wall(global.COMPASS.WEST)
+		check_cell.remove_wall(global.COMPASS.EAST)
 		
-	check_cell = get_cell(x, y - 1)
+	check_cell = get_cell(x, y + 1)
 	if check_cell != null:
 		cell.remove_wall(global.COMPASS.SOUTH)
 		check_cell.remove_wall(global.COMPASS.NORTH)
+		
+	check_cell = get_cell(x, y - 1)
+	if check_cell != null:
+		cell.remove_wall(global.COMPASS.NORTH)
+		check_cell.remove_wall(global.COMPASS.SOUTH)
 
 	# Incredibly important steps
 	cell.translate(Vector3(x * global.CELL_SIZE, 0, y * global.CELL_SIZE))
@@ -82,7 +82,7 @@ func parse_level(level: Dictionary):
 	
 	if level.has("doors"):
 		for door in level.doors:
-			var dir = global.stringToCompass(door.pos[2])
+			var dir = global.str_to_compass(door.pos[2])
 			var type = Door.types.WOOD if !door.has("type") else door.type
 			var open = false if !door.has("open") else door.open
 			var buttons = false if !door.has("buttons") else door.buttons
@@ -93,7 +93,7 @@ func parse_level(level: Dictionary):
 
 	if level.has("activators"):
 		for act in level.activators:
-			var dir = global.stringToCompass(act.pos[2])
+			var dir = global.str_to_compass(act.pos[2])
 			var cell = get_cell(act.pos[0], act.pos[1])
 			var node
 			if cell != null:
@@ -120,7 +120,7 @@ func parse_level(level: Dictionary):
 
 	if level.has("wall_details"):
 		for detail in level.wall_details:
-			var dir = global.stringToCompass(detail.pos[2])
+			var dir = global.str_to_compass(detail.pos[2])
 			var cell = get_cell(detail.pos[0], detail.pos[1])
 			if cell != null:
 				var detail_node = cell.add_wall_detail(detail.type, dir)
@@ -132,10 +132,15 @@ func parse_level(level: Dictionary):
 
 	if level.has("center_details"):
 		for detail in level.center_details:
-			var dir = global.stringToCompass(detail.pos[2])
+			var dir = global.str_to_compass(detail.pos[2])
 			var cell = get_cell(detail.pos[0], detail.pos[1])
 			if cell != null:
 				cell.add_center_detail(detail.type, dir)
 			else:
 				print("### Parse error: Tried to place center_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
 
+	if level.has("items"):
+		for item in level.items:
+			var item_object: Item = Item.new(item.id)
+			var cell = get_cell(item.pos[0], item.pos[1])
+			cell.add_item(item_object, item.pos[2])

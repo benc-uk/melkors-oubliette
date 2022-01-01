@@ -29,6 +29,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://deco/door.gd"
 }, {
+"base": "Object",
+"class": "Item",
+"language": "GDScript",
+"path": "res://item.gd"
+}, {
+"base": "Spatial",
+"class": "ItemNode",
+"language": "GDScript",
+"path": "res://item-node.gd"
+}, {
 "base": "Spatial",
 "class": "Map",
 "language": "GDScript",
@@ -44,13 +54,15 @@ _global_script_class_icons={
 "Activator": "",
 "Cell": "",
 "Door": "",
+"Item": "",
+"ItemNode": "",
 "Map": "",
 "Splat": ""
 }
 
 [application]
 
-config/name="Dungeon Trek"
+config/name="Melkor's Oubliette"
 run/main_scene="res://main-menu.tscn"
 config/icon="res://icon.png"
 
@@ -116,5 +128,5 @@ step_right={
 
 [rendering]
 
-quality/filters/use_fxaa=true
+2d/snapping/use_gpu_pixel_snap=true
 environment/default_environment="res://res/default_env.tres"

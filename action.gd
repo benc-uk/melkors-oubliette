@@ -61,7 +61,7 @@ func parse(input: Dictionary, map):
 			target = target_cell
 			if input.param[0] == "add":
 				function = "add_center_detail"
-				params = [input.param[1], global.stringToCompass(input.pos[2])]
+				params = [input.param[1], global.str_to_compass(input.pos[2])]
 			if input.param[0] == "remove":
 				function = "remove_center_detail"
 		TYPE_PLAY_SOUND:

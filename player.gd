@@ -21,6 +21,7 @@ var elapsed: float
 var clip_cheat = true
 var ticks = 0
 
+var in_left_hand = null
 const FOOT_SFX = [
 	preload("res://sound/player_footstep01.wav"), 
 	preload("res://sound/player_footstep02.wav"),
@@ -29,7 +30,6 @@ const FOOT_SFX = [
 ]
 
 func _ready():
-	#map = get_node("/root/main/map")
 	$camera.translate(Vector3(0, CAM_HEIGHT, CAM_BACK))
 	$torch_far.translate(Vector3(0, CAM_HEIGHT, 0))
 	$torch_near.translate(Vector3(0, CAM_HEIGHT, 0))

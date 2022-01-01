@@ -1,8 +1,7 @@
 name: The Oubliette
 map: |
-  OO OOOO
+  OOOOOO
   OO
-
 player_start:
   pos: [0, 0, E]
 
@@ -13,6 +12,12 @@ activators:
       activated:
         - { type: remove_wall, pos: [2, 0] }
         - { type: play_sound, pos: [1, 0], param: scraping-stone.wav }
+
+items:
+  - { id: potion, pos: [4, 0, ne] }
+  - { id: sword, pos: [4, 0, ne] }
+  - { id: bread, pos: [4, 0, sw] }
+  - { id: rock, pos: [4, 0, sw] }
 
 wall_details:
   - pos: [0, 0, N]

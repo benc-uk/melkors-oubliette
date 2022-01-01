@@ -1,0 +1,38 @@
+{
+  "_": {
+    "name": "Placeholder",
+    "description": "Placeholder",
+    "icon": "_placeholder",
+    "weight": 0.0
+  },
+  "potion": {
+    "name": "Potion of Healing",
+    "description": "Heals the target for 50% of their maximum health.",
+    "icon": "2073",
+    "weight": 0.3
+  },
+  "bread": {
+    "name": "Bread",
+    "description": "A loaf of bread.",
+    "icon": "1738",
+    "weight": 0.2
+  },
+  "sword": {
+    "name": "Steel Sword",
+    "description": "A steel sword.",
+    "icon": "2281",
+    "weight": 2.0
+  },
+  "toadstool": {
+    "name": "Red toadstool",
+    "description": "A poisonous fungus",
+    "icon": "1627",
+    "weight": 0.1
+  },
+  "rock": {
+    "name": "Rock",
+    "description": "A small rock.",
+    "icon": "1218",
+    "weight": 0.1
+  }
+}

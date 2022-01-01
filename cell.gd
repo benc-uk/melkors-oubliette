@@ -11,6 +11,8 @@ var wall_details = [null, null, null, null]
 var door = null
 var is_pit = false
 
+
+
 const WALL_DETAILS = {
 	"torch": preload("res://deco/torch.tscn"),
 	
@@ -33,17 +35,28 @@ const CENTER_DETAILS = {
 const DOOR = preload("res://deco/door.tscn")
 const SPLAT = preload("res://deco/splat.tscn")
 
-func _ready() -> void:
+func _ready() -> void:	
 	player_can_pass = true
-	randomize()
-	if randf() > 0.1:
+	if randf() > 0.4:
 		add_splat()
-	if randf() > 0.1:
+	if randf() > 0.9:
 		add_splat()
-
 		
+	# Wire up signals for floor clicks
+	$floor/items_ne/click_area.connect("input_event", self, "_floor_click_handler", ["ne"])
+	$floor/items_se/click_area.connect("input_event", self, "_floor_click_handler", ["se"])
+	$floor/items_sw/click_area.connect("input_event", self, "_floor_click_handler", ["sw"])
+	$floor/items_nw/click_area.connect("input_event", self, "_floor_click_handler", ["nw"])
+	
 func remove_wall(wall_facing: int) -> void:
-	get_node("wall-%d" % wall_facing).queue_free()
+	var d = global.compass_to_char(wall_facing)
+	get_node("wall-" + d).queue_free()
+
+func add_item(item: Item, stack: String):
+	var item_node = item.make_node()
+	item_node.translation.x += (randf() * 4) - 2
+	item_node.translation.z += (randf() * 4) - 2
+	get_node("floor/items_" + stack.to_lower()).add_child(item_node)
 
 func open_pit():
 	is_pit = true
@@ -119,3 +132,15 @@ func play_sound(filename: String):
 func to_string():
 	return "x: "+str(x)+", y:"+str(y)
 	
+func _floor_click_handler(camera, event, position, normal, shape_idx, floor_stack):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			print("shape_idx ", shape_idx)
+			if $"/root/main".in_hand != null:
+				#var node = $"/root/main".in_hand.make_node()
+				add_item($"/root/main".in_hand, floor_stack)
+				$"/root/main".in_hand = null
+				#floor_stack.add_child(node)
+				
+				#Input.set_custom_mouse_cursor(load("res://hud/cursor-hand.png"))
+				$"/root/main/cursor".texture = load("res://hud/cursor-hand.png")
