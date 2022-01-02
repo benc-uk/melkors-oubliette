@@ -41,13 +41,12 @@ func start_game(file_name: String):
 	player.move_to(map.get_cell(level.player_start.pos[0], level.player_start.pos[1]))
 	player.set_facing(global.str_to_compass(level.player_start.pos[2]))
 	$music.play()
-
+	
 func _process(delta):
 	$debug.text = " Player at: " + str(player.cell.x) + ", " + str(player.cell.y) 
 	$cursor.position.x = get_viewport().get_mouse_position().x
 	$cursor.position.y = get_viewport().get_mouse_position().y
-	get_viewport()
-	
+
 func quit():
 	# Reinstantiate the main menu and nuke yourself
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)

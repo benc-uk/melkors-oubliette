@@ -11,8 +11,6 @@ var wall_details = [null, null, null, null]
 var door = null
 var is_pit = false
 
-
-
 const WALL_DETAILS = {
 	"torch": preload("res://deco/torch.tscn"),
 	
@@ -49,13 +47,13 @@ func _ready() -> void:
 	$floor/items_nw/click_area.connect("input_event", self, "_floor_click_handler", ["nw"])
 	
 func remove_wall(wall_facing: int) -> void:
-	var d = global.compass_to_char(wall_facing)
-	get_node("wall-" + d).queue_free()
+	var dir = global.compass_to_char(wall_facing)
+	get_node("wall-" + dir).queue_free()
 
 func add_item(item: Item, stack: String):
 	var item_node = item.make_node()
-	item_node.translation.x += (randf() * 4) - 2
-	item_node.translation.z += (randf() * 4) - 2
+	item_node.translation.x += (randf() * 2) - 1
+	item_node.translation.z += (randf() * 2) - 1
 	get_node("floor/items_" + stack.to_lower()).add_child(item_node)
 
 func open_pit():
@@ -127,20 +125,16 @@ func play_sound(filename: String):
 	sfx.stream = load("res://sound/"+filename)
 	add_child(sfx)
 	sfx.play()
-	pass
+	yield(sfx, "finished")
+	sfx.queue_free()
 	
 func to_string():
-	return "x: "+str(x)+", y:"+str(y)
+	return "x: " + str(x) + ", y:" + str(y)
 	
 func _floor_click_handler(camera, event, position, normal, shape_idx, floor_stack):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			print("shape_idx ", shape_idx)
 			if $"/root/main".in_hand != null:
-				#var node = $"/root/main".in_hand.make_node()
 				add_item($"/root/main".in_hand, floor_stack)
 				$"/root/main".in_hand = null
-				#floor_stack.add_child(node)
-				
-				#Input.set_custom_mouse_cursor(load("res://hud/cursor-hand.png"))
 				$"/root/main/cursor".texture = load("res://hud/cursor-hand.png")

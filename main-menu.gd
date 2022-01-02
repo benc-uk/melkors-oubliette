@@ -6,7 +6,7 @@ const START_FILE = "start.yaml"
 const MAIN_SCENE = preload("res://main.tscn")
 
 # Used when testing
-var fast_load = ""#res://levels/Melkor's Oubliette/start.yaml"
+var fast_load = "res://levels/Melkor's Oubliette/start.yaml"
 
 func _ready():
 	var dir = Directory.new()
