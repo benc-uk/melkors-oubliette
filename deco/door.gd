@@ -4,15 +4,18 @@ class_name Door
 
 enum types {WOOD, PORT}
 
+const WOOD_DOOR = preload("res://obj/door-wood.glb")
+const WOOD_PORT = preload("res://obj/door-port.glb")
+
 var type = types.WOOD
 var has_buttons: bool = true
 var opened: bool = false
 var cell
 	
 func _ready() -> void:
-	var door_scene = load("res://obj/door-wood.glb")
-	if type == types.WOOD: door_scene = load("res://obj/door-wood.glb")
-	if type == types.PORT: door_scene = load("res://obj/door-port.glb")
+	var door_scene = WOOD_DOOR
+	if type == types.WOOD: door_scene = WOOD_DOOR
+	if type == types.PORT: door_scene = WOOD_PORT
 	$"door-body".add_child(door_scene.instance())
 	
 	if not has_buttons:

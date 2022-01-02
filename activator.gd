@@ -59,19 +59,26 @@ func click_handler(camera, event, position, normal, shape_idx):
 func activated():
 	if not enabled: return
 	
-	active = true
-	emit_signal("activated")
+	for action in actions[ACTIVE]:
+		var res = action.execute(self, $"/root/main/map", $"/root/main/player")
+		if typeof(res) == TYPE_BOOL && res == false:
+			# abort action chain
+			return		
 	if sfx_activate_node != null: sfx_activate_node.play()
 	if anim_node != null: anim_node.play("activate")
-	for action in actions[ACTIVE]:
-		action.execute()
+	active = true
+	emit_signal("activated")
 
 func deactivated():
 	if not enabled: return
 	
+	for action in actions[INACTIVE]:
+		var res = action.execute(self, $"/root/main/map", $"/root/main/player")
+		if typeof(res) == TYPE_BOOL && res == false:
+			# abort action chain
+			return
+			
+	if sfx_deactivate_node != null: sfx_deactivate_node.play()	
+	if anim_node != null: anim_node.play("deactivate")		
 	active = false
 	emit_signal("deactivated")
-	if sfx_deactivate_node != null: sfx_deactivate_node.play()	
-	if anim_node != null: anim_node.play("deactivate")
-	for action in actions[INACTIVE]:
-		action.execute()

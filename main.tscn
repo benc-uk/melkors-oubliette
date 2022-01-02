@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://hud/cursor-hand.png" type="Texture" id=1]
 [ext_resource path="res://fonts/BlackCastleMF.ttf" type="DynamicFontData" id=2]
@@ -7,6 +7,8 @@
 [ext_resource path="res://fonts/IMMORTAL.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://hud/207.png" type="Texture" id=6]
 [ext_resource path="res://hud/193.png" type="Texture" id=7]
+[ext_resource path="res://items/2281.png" type="Texture" id=8]
+[ext_resource path="res://res/default_theme.tres" type="Theme" id=9]
 [ext_resource path="res://hud/frame.png" type="Texture" id=10]
 
 [sub_resource type="StyleBoxFlat" id=4]
@@ -25,10 +27,6 @@ shadow_color = Color( 0, 0, 0, 0.529412 )
 shadow_size = 12
 shadow_offset = Vector2( 5, 5 )
 
-[sub_resource type="DynamicFont" id=5]
-size = 34
-font_data = ExtResource( 5 )
-
 [sub_resource type="DynamicFont" id=1]
 size = 40
 use_filter = true
@@ -40,7 +38,7 @@ use_filter = true
 font_data = ExtResource( 5 )
 
 [sub_resource type="StyleBoxFlat" id=2]
-bg_color = Color( 0, 0, 0, 0.380392 )
+bg_color = Color( 0, 0, 0, 0.545098 )
 corner_radius_top_left = 9
 corner_radius_top_right = 9
 corner_radius_bottom_right = 9
@@ -54,6 +52,7 @@ stream = ExtResource( 4 )
 volume_db = -5.824
 
 [node name="pause_popup" type="Popup" parent="."]
+visible = true
 anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
@@ -62,6 +61,7 @@ margin_left = -20.0
 margin_top = -20.0
 margin_right = 20.0
 margin_bottom = 20.0
+theme = ExtResource( 9 )
 popup_exclusive = true
 
 [node name="panel" type="Panel" parent="pause_popup"]
@@ -87,7 +87,6 @@ margin_left = -137.5
 margin_top = -60.0
 margin_right = 137.5
 margin_bottom = 2.0
-custom_fonts/font = SubResource( 5 )
 text = "Quit To Title"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -102,7 +101,6 @@ margin_left = -137.5
 margin_top = 57.0
 margin_right = 137.5
 margin_bottom = 119.0
-custom_fonts/font = SubResource( 5 )
 text = "Resume"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -241,23 +239,64 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="193" type="Sprite" parent="hud"]
+[node name="inv_sprite" type="Sprite" parent="hud"]
 position = Vector2( -75.9375, -68.4375 )
 scale = Vector2( 2.24609, 2.24609 )
 texture = ExtResource( 7 )
 
-[node name="207" type="Sprite" parent="hud"]
-position = Vector2( -168.75, -71.25 )
-scale = Vector2( 2.26562, 2.26562 )
+[node name="inv_left_hand" type="Control" parent="hud"]
+margin_left = -209.0
+margin_top = -212.0
+margin_right = -128.0
+margin_bottom = -132.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="hud/inv_left_hand"]
+scale = Vector2( 2.5, 2.5 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="inv_right_hand" type="Control" parent="hud"]
+margin_left = -116.0
+margin_top = -212.0
+margin_right = -35.0
+margin_bottom = -132.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="hud/inv_right_hand"]
+scale = Vector2( 2.5, 2.5 )
+texture = ExtResource( 8 )
+centered = false
+
+[node name="man_icon" type="Control" parent="hud"]
+margin_left = -202.0
+margin_top = -102.0
+margin_right = -137.0
+margin_bottom = -37.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="hud/man_icon"]
+position = Vector2( 1.25, 0 )
+scale = Vector2( 2.05469, 2.05469 )
 texture = ExtResource( 6 )
+centered = false
 
 [node name="cursor" type="Sprite" parent="."]
 use_parent_material = true
 position = Vector2( 514, 212 )
-scale = Vector2( 1.8, 1.8 )
+scale = Vector2( 2, 2 )
 texture = ExtResource( 1 )
 centered = false
 offset = Vector2( -2, -2 )
 
 [connection signal="pressed" from="pause_popup/panel/quit_btn" to="." method="quit"]
 [connection signal="pressed" from="pause_popup/panel/resume_btn" to="." method="hide_pause"]
+[connection signal="gui_input" from="hud/inv_left_hand" to="." method="_on_inv_left_hand_gui_input"]
+[connection signal="gui_input" from="hud/inv_right_hand" to="." method="_on_inv_right_hand_gui_input"]
+[connection signal="gui_input" from="hud/man_icon" to="." method="_on_man_icon_gui_input"]

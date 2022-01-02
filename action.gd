@@ -2,7 +2,7 @@ extends Node
 
 class_name Action
 
-var target: Node
+var target
 var function: String
 var params: Array
 var sound: String
@@ -11,27 +11,34 @@ const TYPE_DOOR = "door"
 const TYPE_REMOVE_WALL = "remove_wall"
 const TYPE_CELL_DETAIL = "cell_detail"
 const TYPE_PLAY_SOUND = "play_sound"
+const TYPE_CHECK_IN_HAND = "check_in_hand"
+const TYPE_REMOVE_ITEM_IN_HAND = "remove_held_item"
+const TYPE_CHECK_HOLDS_ITEM = "check_holds_item"
 
-func _init(targ: Node = null, fn: String = "noop", param = [], sfx = ""):
+func _init(targ = null, fn: String = "noop", param = [], sfx = ""):
 	target = targ
 	function = fn 
 	params = param
 	sound = sfx
 	
-func execute():
+func execute(activator, map, player):
 	if target == null:
 		print("### Action execution error: no target set")
 		return
 	if function == null || function == "":
 		print("### Action execution error: ", target, " has no function set")
 		return
+	if typeof(target) == TYPE_STRING and target == "get_player":
+		target = player
+	if typeof(target) == TYPE_STRING and target == "get_activator":
+		target = activator	
 		
 	print("+++ Executing action ", function, " on ", target)
-		
+
 	if params.size() > 0:
-		target.callv(function, params)
+		return target.callv(function, params)
 	else:
-		target.call(function)
+		return target.call(function)
 
 func parse(input: Dictionary, map):
 	if !input.has("type"): 
@@ -68,6 +75,17 @@ func parse(input: Dictionary, map):
 			target = target_cell
 			function = "play_sound"
 			params = [input.param]
+		TYPE_CHECK_IN_HAND:
+			target = "get_player"
+			function = "is_in_hand"
+			params = [input.param]
+		TYPE_REMOVE_ITEM_IN_HAND:
+			target = "get_player"
+			function = "remove_item_in_hand"
+		TYPE_CHECK_HOLDS_ITEM:
+			target = "get_activator"
+			function = "contains_item_id"
+			params = [input.param]			
 		_: 
 			print("### Parse error: Action is not a recognized type")
 			return

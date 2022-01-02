@@ -5,6 +5,9 @@ map: |
 player_start:
   pos: [0, 0, E]
 
+doors:
+  - pos: [2, 0, E]
+
 activators:
   - type: push
     pos: [1, 1, S]
@@ -13,11 +16,31 @@ activators:
         - { type: remove_wall, pos: [2, 0] }
         - { type: play_sound, pos: [1, 0], param: scraping-stone.wav }
 
+  - type: key-hole
+    pos: [0, 0, W]
+    states:
+      activated:
+        - { type: check_in_hand, param: iron-key }
+        - { type: remove_held_item }
+        - { type: door, pos: [2, 0], param: open }
+  - type: shelf
+    pos: [0, 1, S]
+    states:
+      activated:
+        - { type: check_holds_item, param: bread }
+        - { type: door, pos: [2, 0], param: close }
+      deactivated:
+        - { type: check_in_hand, param: bread }
+        - { type: door, pos: [2, 0], param: open }
+
 items:
+  - { id: iron-key, pos: [0, 0, ne] }
   - { id: potion, pos: [4, 0, ne] }
   - { id: sword, pos: [4, 0, ne] }
   - { id: bread, pos: [4, 0, sw] }
   - { id: rock, pos: [4, 0, sw] }
+  - { id: rock, pos: [0, 0, sw] }
+  - { id: sword, pos: [0, 0, se] }
 
 wall_details:
   - pos: [0, 0, N]

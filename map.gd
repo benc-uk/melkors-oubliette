@@ -100,6 +100,8 @@ func parse_level(level: Dictionary):
 				match act.type:
 					"push": node = cell.add_wall_detail("push-switch", dir)
 					"lever": node = cell.add_wall_detail("lever", dir)
+					"key-hole": node = cell.add_wall_detail("key-hole", dir)
+					"shelf": node = cell.add_wall_detail("shelf", dir)
 					_: 
 						print("### Parse error: Invalid activator type")
 						continue

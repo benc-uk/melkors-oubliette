@@ -1,4 +1,7 @@
 extends Spatial
+class_name Player
+
+const CURSOR_HAND = preload("res://hud/cursor-hand.png")
 
 export var CAM_HEIGHT = 6.5
 export var CAM_BACK = 3
@@ -7,10 +10,10 @@ export var MOVE_SPEED = 0.4
 export var NEAR_LIGHT_ENERGY = 10
 
 # Light scaling
-export var LIGHT_SCALE = 1.0
-const LIGHT_DECAY_SPEED = 30
-# Set to 1.0 to disable
-const LIGHT_DECAY_AMOUNT = 1.0
+export var light_level = 1.0
+#const LIGHT_DECAY_SPEED = 30
+## Set to 1.0 to disable
+const LIGHT_DECAY_AMOUNT = 1.006
 
 var facing
 var map: Map
@@ -19,9 +22,14 @@ var noise: OpenSimplexNoise
 var noise2: OpenSimplexNoise
 var elapsed: float
 var clip_cheat = true
-var ticks = 0
 
-var in_left_hand = null
+const LEFT_HAND = "left_hand"
+const RIGHT_HAND = "right_hand"
+var inventory = {
+	LEFT_HAND: Item,
+	RIGHT_HAND: Item
+}
+
 const FOOT_SFX = [
 	preload("res://sound/player_footstep01.wav"), 
 	preload("res://sound/player_footstep02.wav"),
@@ -29,6 +37,12 @@ const FOOT_SFX = [
 	preload("res://sound/player_footstep04.wav")
 ]
 
+var in_hand: Item = null
+
+func _init():
+	inventory[LEFT_HAND] = null
+	inventory[RIGHT_HAND] = null
+	
 func _ready():
 	$camera.translate(Vector3(0, CAM_HEIGHT, CAM_BACK))
 	$torch_far.translate(Vector3(0, CAM_HEIGHT, 0))
@@ -46,17 +60,16 @@ func _ready():
 	elapsed = 0
 
 func _process(delta):
-	ticks = ticks + 1
-	if ticks > LIGHT_DECAY_SPEED:
-		ticks = 0
-		LIGHT_SCALE = LIGHT_SCALE / LIGHT_DECAY_AMOUNT
+	light_level = light_level / LIGHT_DECAY_AMOUNT
+		
+	# sub-function for input scanning
 	_process_input()
 	elapsed = elapsed + delta
 	
 	# Fake flame/flicker, move light randomly and alter light brightness
 	var light_modifier = (noise.get_noise_1d(elapsed) + 1) / 2
-	$torch_far.light_energy = (light_modifier * 8 * LIGHT_SCALE)
-	$torch_near.light_energy = NEAR_LIGHT_ENERGY * LIGHT_SCALE
+	$torch_far.light_energy = (light_modifier * 8 * light_level)
+	$torch_near.light_energy = NEAR_LIGHT_ENERGY * light_level
 	var new_height = CAM_HEIGHT + noise2.get_noise_1d(elapsed) * 1.5
 	var new_x = 0 + noise2.get_noise_1d(elapsed + 1000) * 0.5
 	$torch_near.translation.y = new_height
@@ -135,40 +148,52 @@ func _process_input():
 		$mover.interpolate_property(self, "rotation:y", rotation.y, rotation.y-PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$mover.start()
 
-#
-# Instantly move (teleport) to given cell
-#
 func move_to(new_cell: Cell):
 	assert(new_cell != null, "move_to cell can't be null!")
 	cell = new_cell
 	translate(Vector3(cell.x * global.CELL_SIZE, 0, cell.y * global.CELL_SIZE))
 
-#
-#
-#
 func set_facing(new_facing: int):
 	assert(new_facing in global.COMPASS.values(), "Expected a COMPASS value")
 	facing = new_facing
 	rotation.y = global.DIRECTIONS[facing]
 
-#
-#
-#
 func turn_left():
 	facing = facing - 1
 	if(facing < global.COMPASS.NORTH): 
 		facing = global.COMPASS.WEST
 
-#
-#
-#
 func turn_right():
 	facing = facing + 1
 	if(facing > global.COMPASS.WEST): 
 		facing = global.COMPASS.NORTH
 
-
 func grunt():
 	if $"sfx-grunt".playing: return
 	$"sfx-grunt".pitch_scale = 0.7 + randf() * 0.2
 	$"sfx-grunt".play()
+
+func is_in_hand(id: String) -> bool:
+	if in_hand != null and in_hand.item_id == id:
+		return true
+	return false
+
+func remove_item_in_hand():
+	in_hand = null
+	$"/root/main/cursor".texture = CURSOR_HAND
+	$"/root/main/cursor".offset.x = 0
+	$"/root/main/cursor".offset.y = 0
+	
+func put_item_in_hand(item):
+	if item == null: return
+	
+	in_hand = item
+	$"/root/main/cursor".texture = load("res://items/" + item.icon + ".png")
+	$"/root/main/cursor".offset.x = -16
+	$"/root/main/cursor".offset.y = -16
+
+func place_in_inventory(item: Item, slot: String):
+	inventory[slot] = item
+	
+func clear_inventory_slot(slot: String):
+	inventory[slot] = null

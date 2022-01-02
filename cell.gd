@@ -23,6 +23,8 @@ const WALL_DETAILS = {
 	"sign": preload("res://deco/sign.tscn"),
 	"push-switch": preload("res://deco/push-switch.tscn"),
 	"lever": preload("res://deco/lever.tscn"),
+	"key-hole": preload("res://deco/keyhole.tscn"),
+	"shelf": preload("res://deco/shelf.tscn"),
 }
 
 const CENTER_DETAILS = {
@@ -134,7 +136,6 @@ func to_string():
 func _floor_click_handler(camera, event, position, normal, shape_idx, floor_stack):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			if $"/root/main".in_hand != null:
-				add_item($"/root/main".in_hand, floor_stack)
-				$"/root/main".in_hand = null
-				$"/root/main/cursor".texture = load("res://hud/cursor-hand.png")
+			if $"/root/main/player".in_hand != null:
+				add_item($"/root/main/player".in_hand, floor_stack)
+				$"/root/main/player".remove_item_in_hand()

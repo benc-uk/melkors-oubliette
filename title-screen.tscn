@@ -1,26 +1,20 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=11 format=2]
 
-[ext_resource path="res://fonts/IMMORTAL.ttf" type="DynamicFontData" id=1]
-[ext_resource path="res://hud/main-menu-bg.png" type="Texture" id=2]
-[ext_resource path="res://main-menu.gd" type="Script" id=3]
-[ext_resource path="res://fonts/BlackCastleMF.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://fonts/BlackCastleMF.ttf" type="DynamicFontData" id=1]
+[ext_resource path="res://res/default_theme.tres" type="Theme" id=2]
+[ext_resource path="res://title-screen.gd" type="Script" id=3]
+[ext_resource path="res://hud/main-menu-bg.png" type="Texture" id=4]
 
 [sub_resource type="StyleBoxTexture" id=2]
-texture = ExtResource( 2 )
+texture = ExtResource( 4 )
 region_rect = Rect2( 0, 0, 1100, 618 )
 modulate_color = Color( 0.0784314, 0.309804, 0.380392, 1 )
 
-[sub_resource type="DynamicFont" id=3]
-size = 34
-font_data = ExtResource( 1 )
-
-[sub_resource type="DynamicFont" id=4]
-size = 101
-extra_spacing_char = 4
-font_data = ExtResource( 4 )
-
-[sub_resource type="DynamicFont" id=5]
-size = 25
+[sub_resource type="DynamicFont" id=10]
+size = 84
+outline_size = 3
+outline_color = Color( 0.839216, 0.45098, 0.0470588, 0.752941 )
+extra_spacing_char = 2
 font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=6]
@@ -39,12 +33,13 @@ shadow_color = Color( 0, 0, 0, 0.827451 )
 shadow_size = 12
 shadow_offset = Vector2( 5, 5 )
 
+[sub_resource type="DynamicFont" id=11]
+size = 25
+extra_spacing_char = 2
+font_data = ExtResource( 1 )
+
 [sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0.843137, 0.4, 0.0784314, 0.168627 )
-
-[sub_resource type="DynamicFont" id=8]
-size = 26
-font_data = ExtResource( 1 )
 
 [sub_resource type="StyleBoxFlat" id=9]
 bg_color = Color( 0.00392157, 0.0470588, 0.0784314, 1 )
@@ -57,6 +52,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 margin_right = 1024.0
 margin_bottom = 600.0
+theme = ExtResource( 2 )
 custom_styles/panel = SubResource( 2 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -71,7 +67,6 @@ margin_left = -137.5
 margin_top = 32.0
 margin_right = 137.5
 margin_bottom = 94.0
-custom_fonts/font = SubResource( 3 )
 text = "New Game"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -86,7 +81,6 @@ margin_left = -137.5
 margin_top = 32.0
 margin_right = 137.5
 margin_bottom = 94.0
-custom_fonts/font = SubResource( 3 )
 disabled = true
 text = "Load Game"
 __meta__ = {
@@ -105,11 +99,10 @@ margin_bottom = 55.0
 grow_horizontal = 2
 grow_vertical = 2
 rect_pivot_offset = Vector2( -160, -65.5 )
-custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
-custom_constants/shadow_offset_x = 3
-custom_constants/shadow_offset_y = 2
-custom_fonts/font = SubResource( 4 )
+custom_fonts/font = SubResource( 10 )
 text = "Melkor's Oubliette"
+align = 1
+valign = 1
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -129,7 +122,6 @@ size_flags_horizontal = 15
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_constants/shadow_offset_x = 3
 custom_constants/shadow_offset_y = 2
-custom_fonts/font = SubResource( 5 )
 text = "(C) Ben Coleman, 2021"
 align = 2
 valign = 2
@@ -140,7 +132,11 @@ __meta__ = {
 [node name="start_popup" type="Popup" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0
+theme = ExtResource( 2 )
 popup_exclusive = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
 
 [node name="panel" type="Panel" parent="start_popup"]
 margin_left = 239.0
@@ -159,7 +155,6 @@ margin_left = 14.0
 margin_top = -63.0
 margin_right = 164.0
 margin_bottom = -14.0
-custom_fonts/font = SubResource( 3 )
 text = "Back"
 __meta__ = {
 "_edit_use_anchors_": false
@@ -174,7 +169,6 @@ margin_left = -164.0
 margin_top = -62.0
 margin_right = -14.0
 margin_bottom = -13.0
-custom_fonts/font = SubResource( 3 )
 disabled = true
 text = "Begin..."
 __meta__ = {
@@ -196,7 +190,7 @@ size_flags_horizontal = 15
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_constants/shadow_offset_x = 3
 custom_constants/shadow_offset_y = 2
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 11 )
 custom_styles/normal = SubResource( 7 )
 text = " Main Game"
 valign = 2
@@ -214,7 +208,6 @@ margin_top = -134.5
 margin_right = 254.0
 margin_bottom = -43.5
 custom_colors/font_color = Color( 0.164706, 0.498039, 0.921569, 1 )
-custom_fonts/font = SubResource( 8 )
 custom_styles/bg = SubResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -235,7 +228,7 @@ size_flags_horizontal = 15
 custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
 custom_constants/shadow_offset_x = 3
 custom_constants/shadow_offset_y = 2
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 11 )
 custom_styles/normal = SubResource( 7 )
 text = " Custom Levels"
 valign = 2
@@ -253,7 +246,6 @@ margin_top = 11.0
 margin_right = 254.0
 margin_bottom = 118.0
 custom_colors/font_color = Color( 0.164706, 0.498039, 0.921569, 1 )
-custom_fonts/font = SubResource( 8 )
 custom_styles/bg = SubResource( 9 )
 __meta__ = {
 "_edit_use_anchors_": false
