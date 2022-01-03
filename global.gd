@@ -14,6 +14,8 @@ const DIRECTIONS = [0, -(PI/2), PI, +(PI/2)]
 var item_db: Dictionary
 const ITEM_DB_PATH = "items/db.json"
 
+const GOD = false
+
 # Helper to convert compass direction from string
 # You can use single letters or words
 static func str_to_compass(compass_str) -> int:

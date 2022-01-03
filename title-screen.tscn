@@ -129,6 +129,26 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="title3" type="Label" parent="panel"]
+anchor_top = 1.0
+anchor_bottom = 1.0
+margin_left = 12.0
+margin_top = -27.0
+margin_right = 292.0
+margin_bottom = 8.0
+grow_horizontal = 2
+grow_vertical = 2
+rect_scale = Vector2( 0.5, 0.5 )
+size_flags_horizontal = 15
+custom_colors/font_color_shadow = Color( 0, 0, 0, 1 )
+custom_constants/shadow_offset_x = 3
+custom_constants/shadow_offset_y = 2
+text = "v0.0.1"
+valign = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="start_popup" type="Popup" parent="."]
 margin_right = 40.0
 margin_bottom = 40.0

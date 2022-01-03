@@ -2,15 +2,15 @@
 
 importer="texture"
 type="StreamTexture"
-path="res://.import/770_held.png-a68f6b72aba76d631de0296858cf8e4a.stex"
+path="res://.import/exit.png-6f1947ca824cd9d956820b9fde796391.stex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://items/770_held.png"
-dest_files=[ "res://.import/770_held.png-a68f6b72aba76d631de0296858cf8e4a.stex" ]
+source_file="res://textures/exit.png"
+dest_files=[ "res://.import/exit.png-6f1947ca824cd9d956820b9fde796391.stex" ]
 
 [params]
 
@@ -23,7 +23,7 @@ flags/repeat=0
 flags/filter=false
 flags/mipmaps=false
 flags/anisotropic=false
-flags/srgb=2
+flags/srgb=1
 process/fix_alpha_border=false
 process/premult_alpha=false
 process/HDR_as_SRGB=false

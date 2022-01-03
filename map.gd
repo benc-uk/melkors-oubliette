@@ -1,9 +1,11 @@
 extends Spatial
 
 class_name Map
+signal map_parsed
 
 export var width = 100
 export var height = 100
+export var is_flooded = false
 
 # Big old global array of all the cells in the map
 var cells
@@ -16,7 +18,7 @@ func _init():
 		cells.append([])
 		for _x in range(width):
 			cells[y].append(null)
-
+			
 func add_cell(x: int, y: int) -> Cell:
 	if x > width - 1 or y > height - 1:
 		return null
@@ -26,6 +28,7 @@ func add_cell(x: int, y: int) -> Cell:
 		return null
 		
 	var cell = CELL_SCENE.instance()
+	if is_flooded: cell.get_node("water").visible = true
 
 	var check_cell := get_cell(x + 1, y)
 	if check_cell != null:
@@ -64,6 +67,9 @@ func get_cell(x: int, y: int) -> Cell:
 	return cells[x][y]
 
 func parse_level(level: Dictionary):
+	if level.has("flags"):
+		if level.flags.has("flooded"): is_flooded = level.flags.flooded
+			
 	var map_array = level.map.split("\n", true, 0)
 	var x = 0
 	var y = 0
@@ -91,8 +97,8 @@ func parse_level(level: Dictionary):
 			else:
 				print("### Parse error: Tried to add a door in a null cell: ",door.pos[0], ",", door.pos[1])
 
-	if level.has("activators"):
-		for act in level.activators:
+	if level.has("things"):
+		for act in level.things:
 			var dir = global.str_to_compass(act.pos[2])
 			var cell = get_cell(act.pos[0], act.pos[1])
 			var node
@@ -102,9 +108,17 @@ func parse_level(level: Dictionary):
 					"lever": node = cell.add_wall_detail("lever", dir)
 					"key-hole": node = cell.add_wall_detail("key-hole", dir)
 					"shelf": node = cell.add_wall_detail("shelf", dir)
+					"hidden-switch": node = cell.add_wall_detail("hidden-switch", dir)
 					_: 
-						print("### Parse error: Invalid activator type")
+						print("### Parse error: Invalid activator type:", act.type)
 						continue
+						
+				if node == null: continue
+				
+				if node.is_container and act.has("holds"):
+					for item in act.holds:
+						node.add_new_item(item.id)
+						
 				if act.has("states"):
 					if act.states.has("activated"):
 						for activated_action in act.states.activated:
@@ -146,3 +160,10 @@ func parse_level(level: Dictionary):
 			var item_object: Item = Item.new(item.id)
 			var cell = get_cell(item.pos[0], item.pos[1])
 			cell.add_item(item_object, item.pos[2])
+			
+	if level.has("exit"):
+		var dir = global.str_to_compass(level.exit.pos[2])
+		var exit = get_cell(level.exit.pos[0], level.exit.pos[1]).add_center_detail("exit", dir)
+		exit.next_level = level.exit.to
+		
+	emit_signal("map_parsed")

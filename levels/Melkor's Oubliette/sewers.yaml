@@ -1,0 +1,59 @@
+name: Sewers
+map: |
+  OOOOOO
+  O    O
+  OOOOOO
+  O    O
+  OOOOOO
+    O  O
+    O
+   OOO
+   OOO
+   OOO
+
+player_start:
+  pos: [0, 0, S]
+
+flags:
+  flooded: true
+
+center_details:
+  - { type: pillar, pos: [2, 8, N] }
+
+wall_details:
+  - { type: torch, pos: [2, 2, N] }
+  - { type: torch, pos: [2, 4, N] }
+  - { type: torch, pos: [3, 9, S] }
+  - { type: pipe-hole, pos: [0, 1, W] }
+  - { type: rubble, pos: [0, 3, W] }
+  - { type: rubble, pos: [5, 0, N] }
+  - { type: pipe-hole, pos: [5, 4, E] }
+
+things:
+  - type: lever
+    pos: [5, 5, S]
+    states:
+      activated:
+        - { action: door, pos: [1, 2], param: open }
+  - type: push
+    pos: [3, 2, S]
+    states:
+      activated:
+        - { action: door, pos: [1, 2], param: close }
+        - { action: door, pos: [4, 4], param: open }
+  - type: push
+    pos: [2, 2, S]
+    states:
+      activated:
+        - { action: door, pos: [4, 2], param: open }
+
+doors:
+  - { pos: [3, 0, E], type: 1, buttons: true }
+  - { pos: [1, 2, E], type: 1 }
+  - { pos: [4, 2, E], type: 1 }
+  - { pos: [1, 4, E], type: 1 }
+  - { pos: [4, 4, E], type: 1 }
+
+items:
+  - { id: torch, pos: [4, 0, nw] }
+  - { id: potion, pos: [4, 0, sw] }

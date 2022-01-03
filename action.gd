@@ -41,18 +41,18 @@ func execute(activator, map, player):
 		return target.call(function)
 
 func parse(input: Dictionary, map):
-	if !input.has("type"): 
+	if !input.has("action"): 
 		print("### Parse error: Failed to parse action, type is missing")
 		return
 		
 	var target_cell = null
 	if input.has("pos"):
 		target_cell = map.get_cell(input.pos[0], input.pos[1])
-		if target_cell == null && input.type != TYPE_REMOVE_WALL:
+		if target_cell == null && input.action != TYPE_REMOVE_WALL:
 			print("### Parse error: Action targets a null cell: ",input.pos[0], ",", input.pos[1])
 			return
 			
-	match input.type:
+	match input.action:
 		TYPE_DOOR:
 			if target_cell.door == null: 
 				print("### Parse error: Door action targets cell without door: ",input.pos[0], ",", input.pos[1])

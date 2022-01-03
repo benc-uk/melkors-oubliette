@@ -7,6 +7,9 @@ export var item_offsets: Vector3 = Vector3.ZERO
 
 var player
 
+func _init():
+	is_container = true
+	
 func _ready():
 	player = $"/root/main/player"
 	
@@ -25,6 +28,10 @@ func add_item(from_player = true, item = null):
 	else:
 		$item_container.add_child(item.make_node())
 		
+func add_new_item(item_id: String):
+	var item = Item.new(item_id)
+	$item_container.add_child(item.make_node())
+	
 func contains_item_id(id):
 	for child in $item_container.get_children():
 		if child.item.item_id == id: return true

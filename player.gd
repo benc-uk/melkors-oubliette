@@ -10,7 +10,7 @@ export var MOVE_SPEED = 0.4
 export var NEAR_LIGHT_ENERGY = 10
 
 # Light scaling
-export var light_level = 1.0
+export var light_level = 0.0
 #const LIGHT_DECAY_SPEED = 30
 ## Set to 1.0 to disable
 const LIGHT_DECAY_AMOUNT = 1.006
@@ -22,9 +22,11 @@ var noise: OpenSimplexNoise
 var noise2: OpenSimplexNoise
 var elapsed: float
 var clip_cheat = true
+var in_map = false
 
 const LEFT_HAND = "left_hand"
 const RIGHT_HAND = "right_hand"
+const TORCH_ITEM_ID = "torch"
 var inventory = {
 	LEFT_HAND: Item,
 	RIGHT_HAND: Item
@@ -60,11 +62,18 @@ func _ready():
 	elapsed = 0
 
 func _process(delta):
-	light_level = light_level / LIGHT_DECAY_AMOUNT
-		
 	# sub-function for input scanning
 	_process_input()
+	
 	elapsed = elapsed + delta
+	if inventory[LEFT_HAND] != null and inventory[LEFT_HAND].item_id == TORCH_ITEM_ID:
+		inventory[LEFT_HAND].update_charge(delta)
+		light_level = inventory[LEFT_HAND].charge
+	elif inventory[RIGHT_HAND] != null and inventory[RIGHT_HAND].item_id == TORCH_ITEM_ID:
+		inventory[RIGHT_HAND].update_charge(delta)
+		light_level = inventory[RIGHT_HAND].charge
+	else:
+		light_level = 0.0
 	
 	# Fake flame/flicker, move light randomly and alter light brightness
 	var light_modifier = (noise.get_noise_1d(elapsed) + 1) / 2
@@ -78,8 +87,8 @@ func _process(delta):
 	$torch_far.translation.x = new_x
 	
 func _process_input():
-	# Can't interupt movement
-	if($mover.is_active()):
+	# Can't interupt movement or move before in the map
+	if($mover.is_active()) or not in_map:
 		return
 
 	$"sfx-footstep".pitch_scale = 0.6 + randf() * 0.7
@@ -96,46 +105,44 @@ func _process_input():
 		if(Input.is_action_pressed("ui_down")):
 			dir = -1
 
+		var dest_cell = null
 		if(facing == global.COMPASS.NORTH):
-			var dest_cell = map.get_cell(cell.x, cell.y - dir)
+			dest_cell = map.get_cell(cell.x, cell.y - dir)
 			if(dest_cell == null || !dest_cell.player_can_pass): 
 				grunt()
-				return
+				if not global.GOD: return
 			$mover.interpolate_property(self, "translation:z", translation.z, translation.z - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$mover.start()
-			$"sfx-footstep".play()
-			cell = dest_cell
 			
 		if(facing == global.COMPASS.EAST):
-			var dest_cell = map.get_cell(cell.x + dir, cell.y)
+			dest_cell = map.get_cell(cell.x + dir, cell.y)
 			if(dest_cell == null || !dest_cell.player_can_pass): 
 				grunt()
-				return
+				if not global.GOD: return
 			$mover.interpolate_property(self, "translation:x", translation.x, translation.x + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$mover.start()
-			$"sfx-footstep".play()
-			cell = dest_cell
 			
 		if(facing == global.COMPASS.SOUTH):
-			var dest_cell = map.get_cell(cell.x, cell.y + dir)
+			dest_cell = map.get_cell(cell.x, cell.y + dir)
 			if(dest_cell == null || !dest_cell.player_can_pass):
 				grunt()
-				return
+				if not global.GOD: return	
 			$mover.interpolate_property(self, "translation:z", translation.z, translation.z + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$mover.start()
-			$"sfx-footstep".play()
-			cell = dest_cell
 			
 		if(facing == global.COMPASS.WEST):
-			var dest_cell = map.get_cell(cell.x - dir, cell.y)
+			dest_cell = map.get_cell(cell.x - dir, cell.y)
 			if(dest_cell == null || !dest_cell.player_can_pass):
 				grunt()
-				return
+				if not global.GOD: return
 			$mover.interpolate_property(self, "translation:x", translation.x, translation.x - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			$mover.start()
-			$"sfx-footstep".play()
-			cell = dest_cell
 		
+		# Special bullshit to handle level exits
+		if dest_cell.center_detail != null and dest_cell.center_detail.name == "exit":
+			$mover.remove_all()
+			$"..".start_level(dest_cell.center_detail.next_level, null)
+			return
+			
+		$mover.start()
+		$"sfx-footstep".play()
+		cell = dest_cell
 		print("+++ Player moved to: %s, %s"% [cell.x, cell.y])
 
 	if(Input.is_action_pressed("ui_left")):
@@ -150,12 +157,17 @@ func _process_input():
 
 func move_to(new_cell: Cell):
 	assert(new_cell != null, "move_to cell can't be null!")
+	print("player move to ",new_cell.x,",",new_cell.y)
 	cell = new_cell
-	translate(Vector3(cell.x * global.CELL_SIZE, 0, cell.y * global.CELL_SIZE))
+	translation.x = cell.x * global.CELL_SIZE
+	translation.y = 0
+	translation.z = cell.y * global.CELL_SIZE
+	##translate(Vector3(cell.x * global.CELL_SIZE, 0, cell.y * global.CELL_SIZE))
 
 func set_facing(new_facing: int):
 	assert(new_facing in global.COMPASS.values(), "Expected a COMPASS value")
 	facing = new_facing
+	print("player face to ", facing)
 	rotation.y = global.DIRECTIONS[facing]
 
 func turn_left():
@@ -194,6 +206,17 @@ func put_item_in_hand(item):
 
 func place_in_inventory(item: Item, slot: String):
 	inventory[slot] = item
-	
+	var icon = item.icon
+	if item.item_id == TORCH_ITEM_ID:
+		icon += "_held"
+	if slot == LEFT_HAND:
+		$"/root/main/hud/inv_left_hand/sprite".texture = load("res://items/" + icon + ".png")
+	if slot == RIGHT_HAND:
+		$"/root/main/hud/inv_right_hand/sprite".texture = load("res://items/" + icon + ".png")
+		
 func clear_inventory_slot(slot: String):
 	inventory[slot] = null
+	if slot == LEFT_HAND:
+		$"/root/main/hud/inv_left_hand/sprite".texture = null
+	if slot == RIGHT_HAND:
+		$"/root/main/hud/inv_right_hand/sprite".texture = null

@@ -11,6 +11,7 @@ const INACTIVE = "inactive"
 var active: bool = false
 var message = ""
 var enabled = true
+var is_container = false
 
 # Toggle true means this will flip between states, like a lever
 # False means it only fires activated() events, like a push button

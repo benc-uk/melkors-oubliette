@@ -1,4 +1,4 @@
-[gd_scene load_steps=15 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://hud/cursor-hand.png" type="Texture" id=1]
 [ext_resource path="res://fonts/BlackCastleMF.ttf" type="DynamicFontData" id=2]
@@ -7,7 +7,6 @@
 [ext_resource path="res://fonts/IMMORTAL.ttf" type="DynamicFontData" id=5]
 [ext_resource path="res://hud/207.png" type="Texture" id=6]
 [ext_resource path="res://hud/193.png" type="Texture" id=7]
-[ext_resource path="res://items/2281.png" type="Texture" id=8]
 [ext_resource path="res://res/default_theme.tres" type="Theme" id=9]
 [ext_resource path="res://hud/frame.png" type="Texture" id=10]
 
@@ -255,7 +254,6 @@ __meta__ = {
 
 [node name="sprite" type="Sprite" parent="hud/inv_left_hand"]
 scale = Vector2( 2.5, 2.5 )
-texture = ExtResource( 8 )
 centered = false
 
 [node name="inv_right_hand" type="Control" parent="hud"]
@@ -269,7 +267,6 @@ __meta__ = {
 
 [node name="sprite" type="Sprite" parent="hud/inv_right_hand"]
 scale = Vector2( 2.5, 2.5 )
-texture = ExtResource( 8 )
 centered = false
 
 [node name="man_icon" type="Control" parent="hud"]

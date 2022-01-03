@@ -57,6 +57,8 @@
 	"name": "Torch",
 	"description": "A torch for lighting.",
 	"icon": "770",
-	"weight": 0.1
+	"weight": 0.1,
+	"charge": 1.0,
+	"charge_decay_fn": "(1 - t*t) * 5"
   }
 }

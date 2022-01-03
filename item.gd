@@ -13,8 +13,9 @@ var icon = "placeholder"
 var resize = 1.0
 
 # Light props
-var light_level = null
-var light_decay_speed = null
+var charge = null
+var held_time = 0
+var charge_decay_fn = null
 
 const ITEM_NODE_SCENE = preload("res://item-node.tscn")
 
@@ -29,11 +30,16 @@ func _init(id: String):
 	icon = template.icon
 	description = template.description
 	resize = template.resize if template.has("resize") else 1.0
-	light_level = template.light_level if template.has("light_level") else null
-	light_decay_speed = template.light_decay_speed if template.has("light_decay_speed") else null
+	charge = template.charge if template.has("charge") else null
+	charge_decay_fn = template.charge_decay_fn if template.has("charge_decay_fn") else null
 
 func make_node():
 	var node = ITEM_NODE_SCENE.instance()
 	node.item = self
 	return node
 	
+func update_charge(t_held_delta: float):
+	held_time += t_held_delta
+	if charge != null:
+		charge = charge / 1.0002
+

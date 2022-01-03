@@ -24,10 +24,12 @@ const WALL_DETAILS = {
 	"push-switch": preload("res://deco/push-switch.tscn"),
 	"lever": preload("res://deco/lever.tscn"),
 	"key-hole": preload("res://deco/keyhole.tscn"),
+	"hidden-switch": preload("res://deco/hidden-switch.tscn"),
 	"shelf": preload("res://deco/shelf.tscn"),
 }
 
 const CENTER_DETAILS = {
+	"exit": preload("res://deco/exit.tscn"),
 	"pillar": preload("res://deco/pillar.tscn"),
 	"stone-block": preload("res://deco/stone-block.tscn")
 }
@@ -88,6 +90,9 @@ func add_center_detail(name: String, direction: int = global.COMPASS.NORTH):
 	player_can_pass = false
 	add_child(center_detail)
 	center_detail.rotate_y(global.DIRECTIONS[direction])
+	
+	if name == "exit":
+		player_can_pass = true
 	return center_detail
 
 func remove_center_detail():

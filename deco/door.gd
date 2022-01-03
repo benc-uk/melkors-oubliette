@@ -4,15 +4,15 @@ class_name Door
 
 enum types {WOOD, PORT}
 
-const WOOD_DOOR = preload("res://obj/door-wood.glb")
-const WOOD_PORT = preload("res://obj/door-port.glb")
-
 var type = types.WOOD
 var has_buttons: bool = true
 var opened: bool = false
 var cell
 	
 func _ready() -> void:
+	var WOOD_DOOR = load("res://obj/door-wood.glb")
+	var WOOD_PORT = load("res://obj/door-port.glb")
+
 	var door_scene = WOOD_DOOR
 	if type == types.WOOD: door_scene = WOOD_DOOR
 	if type == types.PORT: door_scene = WOOD_PORT
@@ -50,10 +50,7 @@ func toggle() -> void:
 	
 func click_handler(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			if $"/root/main/player".cell != get_parent():
-				return
-				
+		if event.button_index == BUTTON_LEFT and event.pressed == true:		
 			$"push-switch-stone1/anim".play("activate")
 			$"push-switch-stone2/anim".play("activate")
 			toggle()

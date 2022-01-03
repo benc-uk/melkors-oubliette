@@ -6,7 +6,7 @@ const START_FILE = "start.yaml"
 const MAIN_SCENE = preload("res://main.tscn")
 
 # Used when testing
-var fast_load = "res://levels/Melkor's Oubliette/start.yaml"
+var fast_load = ""#res://levels/Melkor's Oubliette/sewers.yaml"
 
 func _ready():
 	var dir = Directory.new()
@@ -15,7 +15,7 @@ func _ready():
 		
 	# Skip menus and jump straight in
 	if fast_load != "":
-		call_deferred("load_and_start", fast_load)
+		call_deferred("load_and_start", fast_load, [2, 4])
 	
 func _on_new_btn_pressed():
 	$start_popup/panel/level_list.clear()
@@ -58,11 +58,15 @@ func _on_start_btn_pressed():
 		var selected_level = $start_popup/panel/level_list_custom.get_item_text(level_index)
 		load_and_start(CUSTOM_LEVEL_PATH + "/" + selected_level + "/" + START_FILE)
 
-func load_and_start(file: String):
+func load_and_start(file: String, debug = null):
+	print("### Enabling debug cheats: ", debug)
+	
 	# Add main game scene to the tree
 	var main = MAIN_SCENE.instance()
 	get_tree().get_root().add_child(main)
-	main.start_game(file)
+	# Start!
+	main.start_level(file, debug)
+	
 	# Kiss goodbye to the main menu
 	queue_free()
 	

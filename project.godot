@@ -139,4 +139,5 @@ step_right={
 [rendering]
 
 2d/snapping/use_gpu_pixel_snap=true
+quality/filters/use_fxaa=true
 environment/default_environment="res://res/default_env.tres"
