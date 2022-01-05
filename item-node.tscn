@@ -11,9 +11,10 @@ script = ExtResource( 1 )
 
 [node name="sprite" type="Sprite3D" parent="."]
 cast_shadow = 0
+generate_lightmap = false
+modulate = Color( 0.882353, 0.882353, 0.882353, 1 )
 billboard = 1
 shaded = true
-alpha_cut = 1
 texture = ExtResource( 3 )
 
 [node name="click_area" type="Area" parent="."]

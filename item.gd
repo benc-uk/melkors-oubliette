@@ -15,12 +15,12 @@ var resize = 1.0
 # Light props
 var charge = null
 var held_time = 0
-var charge_decay_fn = null
+var charge_decay_expr = null
 
 const ITEM_NODE_SCENE = preload("res://item-node.tscn")
 
 func _init(id: String):
-	if not global.item_db.has(id):
+	if !global.item_db.has(id):
 		id = "_"
 		
 	var template = global.item_db[id]
@@ -31,7 +31,9 @@ func _init(id: String):
 	description = template.description
 	resize = template.resize if template.has("resize") else 1.0
 	charge = template.charge if template.has("charge") else null
-	charge_decay_fn = template.charge_decay_fn if template.has("charge_decay_fn") else null
+	if template.has("charge_decay_fn"):
+		charge_decay_expr = Expression.new()
+		charge_decay_expr.parse(template.charge_decay_fn, ["t"])
 
 func make_node():
 	var node = ITEM_NODE_SCENE.instance()
@@ -40,6 +42,6 @@ func make_node():
 	
 func update_charge(t_held_delta: float):
 	held_time += t_held_delta
-	if charge != null:
-		charge = charge / 1.0002
-
+	if charge:
+		var r = charge_decay_expr.execute([held_time])
+		charge = max(0, r) 

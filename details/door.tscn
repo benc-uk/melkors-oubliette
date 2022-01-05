@@ -1,0 +1,178 @@
+[gd_scene load_steps=15 format=2]
+
+[ext_resource path="res://sound/wooden_click.wav" type="AudioStream" id=1]
+[ext_resource path="res://details/door.gd" type="Script" id=2]
+[ext_resource path="res://sound/door.wav" type="AudioStream" id=3]
+[ext_resource path="res://obj/push-switch-body.glb" type="PackedScene" id=4]
+[ext_resource path="res://obj/door-frame-stone.glb" type="PackedScene" id=5]
+[ext_resource path="res://obj/push-switch-main.glb" type="PackedScene" id=6]
+
+[sub_resource type="Animation" id=5]
+resource_name = "close"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1, 0.0647045 ),
+"update": 0,
+"values": [ Vector3( 0, 12.3, 0 ), Vector3( 0, 4.6, 0 ) ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "open"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5 ),
+"transitions": PoolRealArray( 1.62452, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 4.6, 0 ), Vector3( 0, 12.3, 0 ) ]
+}
+
+[sub_resource type="BoxShape" id=4]
+
+[sub_resource type="BoxShape" id=7]
+
+[sub_resource type="PlaneMesh" id=8]
+
+[sub_resource type="SpatialMaterial" id=9]
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="Animation" id=10]
+resource_name = "activate"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 1 ), Vector3( 0, 0, -2.5 ), Vector3( 0, 0, 1 ) ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "activate"
+tracks/0/type = "value"
+tracks/0/path = NodePath(".:translation")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.5, 1 ),
+"transitions": PoolRealArray( 1, 1, 1 ),
+"update": 0,
+"values": [ Vector3( 0, 0, 1 ), Vector3( 0, 0, -2.5 ), Vector3( 0, 0, 1 ) ]
+}
+
+[node name="Spatial" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="door-frame-stone" parent="." instance=ExtResource( 5 )]
+transform = Transform( 0.31, 0, 0, 0, 0.31, 0, 0, 0, 0.3, 0, 4.7, 0.5 )
+
+[node name="door-frame-stone2" parent="." instance=ExtResource( 5 )]
+transform = Transform( -0.31, 0, -4.52987e-08, 0, 0.31, 0, 4.68087e-08, 0, -0.3, 0, 4.7, -0.5 )
+
+[node name="door-body" type="Spatial" parent="."]
+transform = Transform( 0.28, 0, 0, 0, 0.28, 0, 0, 0, 0.38, 0, 12.3, 0 )
+
+[node name="anim" type="AnimationPlayer" parent="door-body"]
+anims/close = SubResource( 5 )
+anims/open = SubResource( 6 )
+
+[node name="_BlockingArea3" type="Area" parent="door-body"]
+transform = Transform( 13.3393, 0, 0, 0, 15.6615, 0, 0, 0, 1, 0, -14.9228, 0 )
+
+[node name="CollisionShape" type="CollisionShape" parent="door-body/_BlockingArea3"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03639, 0 )
+shape = SubResource( 4 )
+
+[node name="_BlockingArea" type="Area" parent="."]
+transform = Transform( 0.66068, 0, 0, 0, 1.3792, 0, 0, 0, 0.2, -4.22925, 5.01269, -1.85058 )
+
+[node name="CollisionShape" type="CollisionShape" parent="_BlockingArea"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03639, 0 )
+shape = SubResource( 4 )
+
+[node name="_BlockingArea2" type="Area" parent="."]
+transform = Transform( 0.66068, 0, 0, 0, 1.3792, 0, 0, 0, 0.2, 4.35227, 5.01269, 2.15757 )
+
+[node name="CollisionShape" type="CollisionShape" parent="_BlockingArea2"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.03639, 0 )
+shape = SubResource( 4 )
+
+[node name="sfx-click" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.69652, 0 )
+stream = ExtResource( 1 )
+bus = "Reverb"
+
+[node name="sfx-door" type="AudioStreamPlayer3D" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.396, 0 )
+stream = ExtResource( 3 )
+unit_db = 20.161
+pitch_scale = 0.61
+bus = "Reverb"
+
+[node name="push-switch-stone1" type="Spatial" parent="."]
+transform = Transform( 0.09, 0, 0, 0, 0.09, 0, 0, 0, 0.09, 4.36001, 6.33937, 2.91998 )
+
+[node name="push-switch-body" parent="push-switch-stone1" instance=ExtResource( 4 )]
+
+[node name="push-switch-main" parent="push-switch-stone1" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+
+[node name="click-area" type="Area" parent="push-switch-stone1/push-switch-main"]
+transform = Transform( 4, 0, 0, 0, 3, 0, 0, 0, 2, 0, 1, 1 )
+
+[node name="box-shape" type="CollisionShape" parent="push-switch-stone1/push-switch-main/click-area"]
+shape = SubResource( 7 )
+
+[node name="hole" type="MeshInstance" parent="push-switch-stone1"]
+transform = Transform( 5.54758, 0, 0, 0, -1.90729e-07, -4.36339, 0, 1, -4.37114e-08, 0.0322964, 0.804268, 0.00995255 )
+mesh = SubResource( 8 )
+material/0 = SubResource( 9 )
+
+[node name="anim" type="AnimationPlayer" parent="push-switch-stone1"]
+root_node = NodePath("../push-switch-main")
+anims/activate = SubResource( 10 )
+
+[node name="push-switch-stone2" type="Spatial" parent="."]
+transform = Transform( -0.09, 0, -7.86805e-09, 0, 0.09, 0, 7.86805e-09, 0, -0.09, -4.36, 6.339, -2.92 )
+
+[node name="push-switch-body" parent="push-switch-stone2" instance=ExtResource( 4 )]
+
+[node name="push-switch-main" parent="push-switch-stone2" instance=ExtResource( 6 )]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1 )
+
+[node name="click-area" type="Area" parent="push-switch-stone2/push-switch-main"]
+transform = Transform( 4, 0, 0, 0, 3, 0, 0, 0, 2, 0, 1, 1 )
+
+[node name="box-shape" type="CollisionShape" parent="push-switch-stone2/push-switch-main/click-area"]
+shape = SubResource( 7 )
+
+[node name="hole" type="MeshInstance" parent="push-switch-stone2"]
+transform = Transform( 5.54758, 0, 0, 0, -1.90729e-07, -4.36339, 0, 1, -4.37114e-08, 0.0322964, 0.804268, 0.00995255 )
+mesh = SubResource( 8 )
+material/0 = SubResource( 9 )
+
+[node name="anim" type="AnimationPlayer" parent="push-switch-stone2"]
+root_node = NodePath("../push-switch-main")
+anims/activate = SubResource( 11 )
+
+[connection signal="input_event" from="push-switch-stone1/push-switch-main/click-area" to="." method="click_handler"]
+[connection signal="input_event" from="push-switch-stone2/push-switch-main/click-area" to="." method="click_handler"]

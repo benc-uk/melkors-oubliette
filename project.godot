@@ -10,11 +10,6 @@ config_version=4
 
 _global_script_classes=[ {
 "base": "Node",
-"class": "Action",
-"language": "GDScript",
-"path": "res://action.gd"
-}, {
-"base": "Node",
 "class": "Activator",
 "language": "GDScript",
 "path": "res://activator.gd"
@@ -27,7 +22,7 @@ _global_script_classes=[ {
 "base": "Node",
 "class": "Door",
 "language": "GDScript",
-"path": "res://deco/door.gd"
+"path": "res://details/door.gd"
 }, {
 "base": "Object",
 "class": "Item",
@@ -57,10 +52,9 @@ _global_script_classes=[ {
 "base": "Spatial",
 "class": "Splat",
 "language": "GDScript",
-"path": "res://deco/splat.gd"
+"path": "res://details/splat.gd"
 } ]
 _global_script_class_icons={
-"Action": "",
 "Activator": "",
 "Cell": "",
 "Door": "",
@@ -77,6 +71,7 @@ _global_script_class_icons={
 config/name="Melkor's Oubliette"
 run/main_scene="res://title-screen.tscn"
 config/icon="res://icon.png"
+config/macos_native_icon="res://icon.icns"
 
 [audio]
 

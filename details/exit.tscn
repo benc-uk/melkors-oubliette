@@ -1,0 +1,30 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://obj/exit-stair-up.glb" type="PackedScene" id=2]
+
+[sub_resource type="PlaneMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 0.329412 )
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 0.921569 )
+
+[node name="exit" type="Spatial"]
+
+[node name="exit-stair-up" parent="." instance=ExtResource( 2 )]
+transform = Transform( 0.153, 0, 0, 0, 0.153, 0, 0, 0, 0.22, 0, 4.89111, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="exit-stair-up"]
+transform = Transform( 30.7913, 0, 0, 0, -1.27917e-06, -29.264, 0, 1, -4.37114e-08, 0, 0.882418, 16.2746 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="MeshInstance2" type="MeshInstance" parent="exit-stair-up"]
+transform = Transform( 30.7913, 0, 0, 0, -1.05797e-06, -24.2036, 0, 1, -4.37114e-08, 0, 9.52639, 4.45506 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 3 )

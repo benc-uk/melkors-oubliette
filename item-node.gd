@@ -19,6 +19,8 @@ func _ready():
 func click_handler(camera, event, position, normal, shape_idx):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			# TODO: Check adjacency
+				
 			if $"/root/main/player".in_hand != null: return
 			$"/root/main/player".put_item_in_hand(item)
 			queue_free()

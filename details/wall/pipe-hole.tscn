@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://obj/pipe-hole.glb" type="PackedScene" id=1]
+
+[sub_resource type="PlaneMesh" id=1]
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 1 )
+
+[node name="pipe-hole" type="Spatial"]
+
+[node name="pipe-hole" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.19, 0, 0, 0, 0.19, 0, 0, 0, 0.19, 0, 6, -5.094 )
+
+[node name="hole" type="MeshInstance" parent="pipe-hole"]
+transform = Transform( 5, 0, 0, 0, 0, -5, 0, 0, -2.18557e-07, 0, 1, 0.75779 )
+cast_shadow = 0
+mesh = SubResource( 1 )
+skeleton = NodePath("../..")
+material/0 = SubResource( 2 )

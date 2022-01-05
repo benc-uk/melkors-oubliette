@@ -1,6 +1,7 @@
 extends Node
 
 # The size in world units of each map cell
+# YOU MUST NEVER CHANGE THIS
 const CELL_SIZE = 10
 const HALF_CELL_SIZE = CELL_SIZE / 2
 
@@ -8,13 +9,23 @@ const HALF_CELL_SIZE = CELL_SIZE / 2
 enum COMPASS {NORTH, EAST, SOUTH, WEST}
 
 # These are rotations in radians around Y axis 
-# which corrispond to the COMPASS enum 
+# which correspond to the COMPASS enum 
 const DIRECTIONS = [0, -(PI/2), PI, +(PI/2)]
 
+# Holds all item templates
 var item_db: Dictionary
-const ITEM_DB_PATH = "items/db.json"
+const ITEM_DB_PATH = "res://items/db.json"
+const CHEATS_FILE_PATH = "user://cheats.json"
 
-const GOD = false
+# Debug cheats...
+# Set to level filename to jump start to it
+var CHEAT_JUMP_LEVEL = null
+# Set to a tuple array, x,y cell to start in
+var CHEAT_START_POS = []
+# Enable walk through walls & doors
+var CHEAT_NOCLIP = false
+# Permanent light source
+var CHEAT_LIGHT = false
 
 # Helper to convert compass direction from string
 # You can use single letters or words
@@ -46,3 +57,15 @@ func _init():
 	if json_result.error != OK:
 		print("SEVERE! Unable to parse item db file. Line:", json_result.error_line, ": ", json_result.error_string)
 	item_db = json_result.result
+	
+	# Parse cheats file
+	if not file.file_exists(CHEATS_FILE_PATH): return
+	file.open(CHEATS_FILE_PATH, File.READ)
+	json_result = JSON.parse(file.get_as_text())
+	if json_result.error != OK:
+		print("WARNING! Unable to parse cheat JSON file. Line:", json_result.error_line, ": ", json_result.error_string)
+		
+	if json_result.result.has("jump_level"): CHEAT_JUMP_LEVEL = json_result.result.jump_level
+	if json_result.result.has("start_pos"): CHEAT_START_POS = json_result.result.start_pos
+	if json_result.result.has("noclip"): CHEAT_NOCLIP = json_result.result.noclip
+	if json_result.result.has("light"): CHEAT_LIGHT = json_result.result.light

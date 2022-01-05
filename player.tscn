@@ -1,8 +1,7 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=3 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
 [ext_resource path="res://sound/player_footstep01.wav" type="AudioStream" id=2]
-[ext_resource path="res://sound/player_grunt2.wav" type="AudioStream" id=3]
 
 [node name="player" type="Spatial"]
 script = ExtResource( 1 )
@@ -30,13 +29,7 @@ omni_attenuation = 0.535888
 
 [node name="mover" type="Tween" parent="."]
 
-[node name="sfx-footstep" type="AudioStreamPlayer3D" parent="."]
+[node name="sfx" type="AudioStreamPlayer3D" parent="."]
 stream = ExtResource( 2 )
 unit_db = 16.134
-bus = "Reverb"
-
-[node name="sfx-grunt" type="AudioStreamPlayer3D" parent="."]
-stream = ExtResource( 3 )
-unit_db = 20.168
-pitch_scale = 0.87
 bus = "Reverb"

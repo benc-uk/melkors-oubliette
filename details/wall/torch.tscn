@@ -1,0 +1,66 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://textures/fire_01.png" type="Texture" id=1]
+[ext_resource path="res://details/wall/torch.gd" type="Script" id=2]
+[ext_resource path="res://obj/torch.glb" type="PackedScene" id=3]
+
+[sub_resource type="SpatialMaterial" id=3]
+flags_unshaded = true
+vertex_color_use_as_albedo = true
+params_blend_mode = 1
+params_billboard_mode = 3
+particles_anim_h_frames = 1
+particles_anim_v_frames = 1
+particles_anim_loop = false
+albedo_texture = ExtResource( 1 )
+
+[sub_resource type="Gradient" id=4]
+offsets = PoolRealArray( 0, 0.741573 )
+colors = PoolColorArray( 0.973633, 0.962193, 0.441177, 1, 0.765625, 0.0508423, 0.0508423, 1 )
+
+[sub_resource type="GradientTexture" id=5]
+gradient = SubResource( 4 )
+
+[sub_resource type="Curve" id=6]
+_data = [ Vector2( 0, 0 ), 0.0, 0.0, 0, 0, Vector2( 0.114428, 1 ), -0.0406063, -0.0406063, 0, 0, Vector2( 0.960199, 0 ), 0.0, 0.0, 0, 0 ]
+
+[sub_resource type="CurveTexture" id=7]
+curve = SubResource( 6 )
+
+[sub_resource type="ParticlesMaterial" id=8]
+emission_shape = 1
+emission_sphere_radius = 0.4
+spread = 0.0
+gravity = Vector3( 0, 0, 0 )
+initial_velocity = 2.0
+initial_velocity_random = 0.34
+angular_velocity = 40.0
+angular_velocity_random = 1.0
+angle = 360.0
+angle_random = 1.0
+scale = 2.0
+scale_curve = SubResource( 7 )
+color_ramp = SubResource( 5 )
+
+[sub_resource type="QuadMesh" id=9]
+
+[node name="torch" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="light" type="OmniLight" parent="."]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00624, -3.36091 )
+light_color = Color( 0.976471, 0.745098, 0.419608, 1 )
+omni_range = 18.0
+omni_attenuation = 0.812252
+
+[node name="flame" type="Particles" parent="."]
+transform = Transform( -2.30926e-14, 1.62921e-07, 1, 1, 0, 0, 0, 1, -1.62921e-07, 0, 7.88195, -3.80816 )
+material_override = SubResource( 3 )
+cast_shadow = 0
+amount = 20
+lifetime = 1.1
+process_material = SubResource( 8 )
+draw_pass_1 = SubResource( 9 )
+
+[node name="torch" parent="." instance=ExtResource( 3 )]
+transform = Transform( -4.81337e-08, 1.13163e-08, 0.3, 0.0520944, 0.393923, -3.1976e-15, -0.295442, 0.0694592, -4.88762e-08, 0, 6.07682, -4.15533 )

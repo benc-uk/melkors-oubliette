@@ -14,7 +14,7 @@ func _ready():
 	player = $"/root/main/player"
 	
 	# default action placed in front of all other actions
-	actions[ACTIVE].push_front(Action.new(self, "add_item", [true, null]))
+	_add_action("add_item(true, null)", ACTIVE, true)
 
 func add_item(from_player = true, item = null):
 	if $item_container.get_child_count() >= max_items: return
@@ -24,7 +24,7 @@ func add_item(from_player = true, item = null):
 			node.connect("picked_up", self, "remove_item")
 			node.translation += (item_offsets * $item_container.get_child_count())
 			$item_container.add_child(node)
-			player.remove_item_in_hand()
+			player.remove_held_item()
 	else:
 		$item_container.add_child(item.make_node())
 		
@@ -32,16 +32,16 @@ func add_new_item(item_id: String):
 	var item = Item.new(item_id)
 	$item_container.add_child(item.make_node())
 	
-func contains_item_id(id):
+func contains_item_id(id) -> bool:
 	for child in $item_container.get_children():
 		if child.item.item_id == id: return true
 	return false
 
 func remove_item():
-	deactivated()
+	_deactivated()
 
 # Needed to push all items into the right place when they are removed
-func _process(delta):
+func _process(_delta):
 	var item_num = 0
 	for item_node in $item_container.get_children():
 		item_node.translation = (item_offsets * item_num)

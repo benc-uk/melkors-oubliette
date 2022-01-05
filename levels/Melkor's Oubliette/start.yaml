@@ -15,36 +15,37 @@ exit:
 doors:
   - { pos: [6, 3, E] }
 
-things:
-  - type: push
+details:
+  - type: wall/push-switch
     pos: [0, 1, S]
     states:
       activated:
-        - { action: remove_wall, pos: [1, 0] }
-        - { action: play_sound, pos: [2, 0], param: scraping-stone.wav }
+        - map.add_cell(1, 0)
+        - map.at(2, 0).play_sound("scraping-stone.wav")
 
-  - type: shelf
+  - type: wall/shelf
     pos: [1, 2, N]
     holds:
       - { id: iron-key }
 
-  - type: key-hole
+  - type: wall/keyhole
     pos: [5, 3, N]
     states:
       activated:
-        - { action: check_in_hand, param: iron-key }
-        - { action: remove_held_item }
-        - { action: door, pos: [6, 3], param: open }
+        - player.is_holding("iron-key")
+        - player.remove_held_item()
+        - map.door(6, 3).open()
+    message: "You may yet have hope..."
+
+  - type: wall/sign
+    pos: [0, 0, N]
+    message: "You will never escape!\nYou will die down here in the oubliette!"
+
+  - { type: wall/pipe-hole, pos: [0, 0, W] }
+  - { type: wall/pipe-hole, pos: [0, 1, E] }
+  - { type: wall/crates, pos: [0, 3, N] }
+  - { type: wall/crates, pos: [2, 3, S] }
 
 items:
   - { id: torch, pos: [0, 0, se] }
   - { id: rock, pos: [4, 1, se] }
-
-wall_details:
-  - pos: [0, 0, N]
-    type: sign
-    message: "You will never escape!\nYou will die down here in the oubliette!"
-  - { type: pipe-hole, pos: [0, 0, W] }
-  - { type: pipe-hole, pos: [0, 1, E] }
-  - { type: crates, pos: [0, 3, N] }
-  - { type: crates, pos: [2, 3, S] }

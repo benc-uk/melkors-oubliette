@@ -66,6 +66,16 @@ func get_cell(x: int, y: int) -> Cell:
 
 	return cells[x][y]
 
+func at(x: int, y: int) -> Cell:
+	return get_cell(x, y)
+	
+func door(x: int, y: int) -> Door:
+	var cell = at(x, y)
+	if cell:
+		return cell.door
+	print("### Warning! No door at %s, %s" % [x, y])
+	return null
+	
 func parse_level(level: Dictionary):
 	if level.has("flags"):
 		if level.flags.has("flooded"): is_flooded = level.flags.flooded
@@ -79,9 +89,9 @@ func parse_level(level: Dictionary):
 		if map_line.substr(0,1) == "'": continue
 		for map_cell in map_line:
 			match map_cell:
-				"#", "O", "*", "0", "@": add_cell(x, y)
+				"#", "O", "*", "0", "@": var _n = add_cell(x, y)
 				"x", "X": 
-					add_cell(x, y)
+					var _n = add_cell(x, y)
 					get_cell(x, y).open_pit()
 			x = x + 1
 		y = y + 1
@@ -97,63 +107,39 @@ func parse_level(level: Dictionary):
 			else:
 				print("### Parse error: Tried to add a door in a null cell: ",door.pos[0], ",", door.pos[1])
 
-	if level.has("things"):
-		for act in level.things:
-			var dir = global.str_to_compass(act.pos[2])
-			var cell = get_cell(act.pos[0], act.pos[1])
+	if level.has("details"):
+		for detail in level.details:
+			var cell = get_cell(detail.pos[0], detail.pos[1])
+			var dir
 			var node
-			if cell != null:
-				match act.type:
-					"push": node = cell.add_wall_detail("push-switch", dir)
-					"lever": node = cell.add_wall_detail("lever", dir)
-					"key-hole": node = cell.add_wall_detail("key-hole", dir)
-					"shelf": node = cell.add_wall_detail("shelf", dir)
-					"hidden-switch": node = cell.add_wall_detail("hidden-switch", dir)
-					_: 
-						print("### Parse error: Invalid activator type:", act.type)
-						continue
-						
-				if node == null: continue
+			if cell:
+				# Handle center details, where dir is used differently
+				if detail.type.begins_with("center/"):
+					dir = Cell.CENTER
+				else:
+					dir = global.str_to_compass(detail.pos[2])
+
+				node = cell.add_detail(detail.type, dir)		
+				if !node: continue
 				
-				if node.is_container and act.has("holds"):
-					for item in act.holds:
+				if node.get_script() and node.is_container and detail.has("holds"):
+					for item in detail.holds:
 						node.add_new_item(item.id)
 						
-				if act.has("states"):
-					if act.states.has("activated"):
-						for activated_action in act.states.activated:
-							var action = Action.new()
-							action.parse(activated_action, self)
-							node.actions[Activator.ACTIVE].append(action)
-					if act.states.has("deactivated"):
-						for deactivated_action in act.states.deactivated:
-							var action = Action.new()
-							action.parse(deactivated_action, self)
-							node.actions[Activator.INACTIVE].append(action)
+				if detail.has("states"):
+					if detail.states.has("activated"):
+						for action_cmd in detail.states.activated:
+							node._add_action(action_cmd, Activator.ACTIVE)
+					if detail.states.has("deactivated"):
+						for action_cmd in detail.states.deactivated:
+							node._add_action(action_cmd, Activator.INACTIVE)
+							
+				if detail.has("message"): 
+					node.message = detail.message
+					node._add_action("main.show_message(message, 6)", Activator.ACTIVE)
 			else:
-				print("### Parse error: Tried to place activators in null cell: ", act.pos[0], ",", act.pos[1])
+				print("### Parse error: Tried to place detail in null cell: ", detail.pos[0], ",", detail.pos[1])
 				continue
-
-	if level.has("wall_details"):
-		for detail in level.wall_details:
-			var dir = global.str_to_compass(detail.pos[2])
-			var cell = get_cell(detail.pos[0], detail.pos[1])
-			if cell != null:
-				var detail_node = cell.add_wall_detail(detail.type, dir)
-
-				if detail.type == "sign" && detail.has("message"): 
-					detail_node.set_message(detail.message)
-			else:
-				print("### Parse error: Tried to place wall_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
-
-	if level.has("center_details"):
-		for detail in level.center_details:
-			var dir = global.str_to_compass(detail.pos[2])
-			var cell = get_cell(detail.pos[0], detail.pos[1])
-			if cell != null:
-				cell.add_center_detail(detail.type, dir)
-			else:
-				print("### Parse error: Tried to place center_detail in null cell: ", detail.pos[0], ",", detail.pos[1])
 
 	if level.has("items"):
 		for item in level.items:
@@ -162,8 +148,7 @@ func parse_level(level: Dictionary):
 			cell.add_item(item_object, item.pos[2])
 			
 	if level.has("exit"):
-		var dir = global.str_to_compass(level.exit.pos[2])
-		var exit = get_cell(level.exit.pos[0], level.exit.pos[1]).add_center_detail("exit", dir)
-		exit.next_level = level.exit.to
+		var exit_cell = get_cell(level.exit.pos[0], level.exit.pos[1])
+		exit_cell.set_as_exit(level.exit.to, global.str_to_compass(level.exit.pos[2]))
 		
 	emit_signal("map_parsed")

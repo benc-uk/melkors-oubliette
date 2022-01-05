@@ -11,7 +11,7 @@ var map: Map
 func _init():
 	yaml_parser = preload("res://addons/godot-yaml/gdyaml.gdns").new()
 	
-func start_level(file_name: String, debug = null):
+func start_level(file_name: String):
 	print("### Starting level: ", file_name)
 
 	# Different paths if first time called, or switching levels
@@ -23,6 +23,10 @@ func start_level(file_name: String, debug = null):
 		map = MAP_SCENE.instance()
 		player = PLAYER_SCENE.instance()
 		add_child(player)
+
+		# On custom levels, start with a torch
+		if file_name.begins_with("user://"):
+			player.place_in_inventory(Item.new("torch"), Player.LEFT_HAND)
 		
 	add_child(map)
 	player.map = map
@@ -33,7 +37,7 @@ func start_level(file_name: String, debug = null):
 	var file = File.new()
 	if !file.file_exists(file_name): 
 		print("### FATAL! Could not load ", file_name, ", sorry!")
-		quit()
+		_quit()
 		return
 	file.open(file_name, File.READ)
 	var level = yaml_parser.parse(file.get_as_text())
@@ -42,43 +46,42 @@ func start_level(file_name: String, debug = null):
 	
 	if not level.has("player_start"):
 		print("### Parse error: Level is missing player_start !")
-		quit()
+		_quit()
 		return
 
 	player.move_to(map.get_cell(level.player_start.pos[0], level.player_start.pos[1]))
 	player.set_facing(global.str_to_compass(level.player_start.pos[2]))
 	$music.play()
-
-	if debug != null:
-		player.place_in_inventory(Item.new("torch"), Player.LEFT_HAND)
-		player.move_to(map.get_cell(debug[0], debug[1]))
+	
+	if global.CHEAT_START_POS.size() == 2:
+		player.move_to(map.get_cell(global.CHEAT_START_POS[0], global.CHEAT_START_POS[1]))
 		
 	yield(get_tree().create_timer(0.3), "timeout")
 	show_message(level.name, 2)
 	player.in_map = true
 	
-func _process(delta):
-	$debug.text = " Player at: " + str(player.cell.x) + ", " + str(player.cell.y) 
+func _process(_delta):
+	$debug.text = " Player at: %s, %s  facing: %s" % [player.x, player.y, global.compass_to_char(player.facing)]
 	$cursor.position.x = get_viewport().get_mouse_position().x
 	$cursor.position.y = get_viewport().get_mouse_position().y
 
-func quit():
+func _quit():
 	# Reinstantiate the main menu and nuke yourself
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	get_tree().get_root().add_child(load("res://title-screen.tscn").instance())	
 	queue_free()
 	
-func show_message(msg, time):
+func show_message(msg, time = 5.0):
 	var timer = Timer.new()
 	timer.one_shot = true
 	timer.wait_time = time
-	timer.connect("timeout", self, "remove_message")
+	timer.connect("timeout", self, "_remove_message")
 	$popup.text = msg
 	$popup.visible = true
 	$popup.add_child(timer)
 	timer.start()
 
-func remove_message():
+func _remove_message():
 	$popup.visible = false
 	
 func hide_pause():
@@ -93,7 +96,7 @@ func _on_inv_left_hand_gui_input(event):
 			if player.in_hand != null:
 				if player.inventory[Player.LEFT_HAND] == null:
 					player.place_in_inventory(player.in_hand, Player.LEFT_HAND)
-					player.remove_item_in_hand()
+					player.remove_held_item()
 				else:
 					var temp = player.inventory[Player.LEFT_HAND]
 					player.place_in_inventory(player.in_hand, Player.LEFT_HAND)
@@ -108,7 +111,7 @@ func _on_inv_right_hand_gui_input(event):
 			if player.in_hand != null:
 				if player.inventory[Player.RIGHT_HAND] == null:
 					player.place_in_inventory(player.in_hand, Player.RIGHT_HAND)
-					player.remove_item_in_hand()
+					player.remove_held_item()
 				else:
 					var temp = player.inventory[Player.RIGHT_HAND]
 					player.place_in_inventory(player.in_hand, Player.RIGHT_HAND)

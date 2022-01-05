@@ -4,12 +4,12 @@ map: |
   O    O
   OOOOOO
   O    O
-  OOOOOO
+  OxOOOO
     O  O
-    O
-   OOO
-   OOO
-   OOO
+    O   O
+   OOOOOOO
+   OOO   O
+   OOOOOO
 
 player_start:
   pos: [0, 0, S]
@@ -17,43 +17,68 @@ player_start:
 flags:
   flooded: true
 
-center_details:
-  - { type: pillar, pos: [2, 8, N] }
-
-wall_details:
-  - { type: torch, pos: [2, 2, N] }
-  - { type: torch, pos: [2, 4, N] }
-  - { type: torch, pos: [3, 9, S] }
-  - { type: pipe-hole, pos: [0, 1, W] }
-  - { type: rubble, pos: [0, 3, W] }
-  - { type: rubble, pos: [5, 0, N] }
-  - { type: pipe-hole, pos: [5, 4, E] }
-
-things:
-  - type: lever
+details:
+  - type: wall/lever
     pos: [5, 5, S]
     states:
       activated:
-        - { action: door, pos: [1, 2], param: open }
-  - type: push
+        - map.door(1, 2).open()
+
+  - type: wall/push-switch
     pos: [3, 2, S]
     states:
       activated:
-        - { action: door, pos: [1, 2], param: close }
-        - { action: door, pos: [4, 4], param: open }
-  - type: push
+        - map.door(1, 2).close()
+        - map.door(4, 4).open()
+
+  - type: wall/push-switch
     pos: [2, 2, S]
     states:
       activated:
-        - { action: door, pos: [4, 2], param: open }
+        - map.door(4, 2).open()
+
+  - { type: wall/torch, pos: [2, 2, N] }
+  - { type: wall/torch, pos: [2, 4, N] }
+  - { type: wall/torch, pos: [3, 9, S] }
+  - { type: wall/torch, pos: [0, 1, W] }
+  - { type: wall/rubble, pos: [0, 3, W] }
+  - { type: wall/rubble, pos: [5, 0, N] }
+  - { type: wall/pipe-hole, pos: [0, 0, N] }
+  - { type: wall/pipe-hole, pos: [0, 0, W] }
+  - { type: wall/pipe-hole, pos: [5, 4, E] }
+  - { type: wall/pipe-hole, pos: [5, 0, E] }
+
+  - type: center/plinth
+    pos: [2, 8, W]
+    states:
+      activated:
+        - contains_item_id("sword")
+        - map.door(4, 9).open()
+      deactivated:
+        - map.door(4, 9).close()
+
+  - { type: wall/pipe-hole, pos: [1, 7, W] }
+  - { type: wall/pipe-hole, pos: [1, 8, W] }
+  - { type: wall/pipe-hole, pos: [1, 9, W] }
+  - { type: wall/rubble, pos: [5, 7, N] }
+
+  - type: wall/sign
+    pos: [6, 9, E]
+    message: "I really should finish this level!\nBye!"
+  - type: wall/sign
+    pos: [1, 9, S]
+    message: "Offer your blade"
 
 doors:
   - { pos: [3, 0, E], type: 1, buttons: true }
   - { pos: [1, 2, E], type: 1 }
   - { pos: [4, 2, E], type: 1 }
-  - { pos: [1, 4, E], type: 1 }
   - { pos: [4, 4, E], type: 1 }
+  - { pos: [4, 9, E] }
 
 items:
   - { id: torch, pos: [4, 0, nw] }
   - { id: potion, pos: [4, 0, sw] }
+  - { id: sword, pos: [7, 8, sw] }
+  - { id: rock, pos: [6, 6, nw] }
+  - { id: rock, pos: [6, 6, se] }

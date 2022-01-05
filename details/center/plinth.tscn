@@ -1,0 +1,32 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://obj/plinth.glb" type="PackedScene" id=1]
+[ext_resource path="res://details/center/plinth.gd" type="Script" id=2]
+[ext_resource path="res://textures/floor-stone.png" type="Texture" id=3]
+
+[sub_resource type="BoxShape" id=1]
+
+[sub_resource type="PlaneMesh" id=2]
+
+[sub_resource type="SpatialMaterial" id=3]
+albedo_texture = ExtResource( 3 )
+
+[node name="plinth" type="Spatial"]
+script = ExtResource( 2 )
+
+[node name="click-area" type="Area" parent="."]
+transform = Transform( 4, 0, 0, 0, 0.4, 0, 0, 0, 4, 0, 4.25901, 0 )
+
+[node name="box-shape" type="CollisionShape" parent="click-area"]
+shape = SubResource( 1 )
+
+[node name="item_container" type="Spatial" parent="."]
+transform = Transform( 0.8, 0, 0, 0, 0.8, 0, 0, 0, 0.8, 0, 5.5386, 0 )
+
+[node name="plinth" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.8, 0, 0, 0, 0.3, 0, 0, 0, 1, 0, 2.30081, 0 )
+
+[node name="MeshInstance" type="MeshInstance" parent="."]
+transform = Transform( 3.6, 0, 0, 0, 1, 0, 0, 0, 3.8, 0, 4.71, 0 )
+mesh = SubResource( 2 )
+material/0 = SubResource( 3 )

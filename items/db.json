@@ -1,64 +1,64 @@
 {
   "_": {
-	"name": "Placeholder",
-	"description": "Placeholder",
-	"icon": "_placeholder",
-	"weight": 0.0
+    "name": "Placeholder",
+    "description": "Placeholder",
+    "icon": "_placeholder",
+    "weight": 0.0
   },
   "potion": {
-	"name": "Potion of Healing",
-	"description": "Heals the target for 50% of their maximum health.",
-	"icon": "2073",
-	"weight": 0.3
+    "name": "Potion of Healing",
+    "description": "Heals the target for 50% of their maximum health.",
+    "icon": "2073",
+    "weight": 0.3
   },
   "bread": {
-	"name": "Bread",
-	"description": "A loaf of bread.",
-	"icon": "1738",
-	"weight": 0.2
+    "name": "Bread",
+    "description": "A loaf of bread.",
+    "icon": "1738",
+    "weight": 0.2
   },
   "rock": {
-	"name": "Rock",
-	"description": "A medium sized rock.",
-	"icon": "1218",
-	"weight": 0.2
+    "name": "Rock",
+    "description": "A medium sized rock.",
+    "icon": "1218",
+    "weight": 0.2
   },
   "sword": {
-	"name": "Steel Sword",
-	"description": "A steel sword.",
-	"icon": "2281",
-	"weight": 2.0
+    "name": "Steel Sword",
+    "description": "A steel sword.",
+    "icon": "2281",
+    "weight": 2.0
   },
   "toadstool": {
-	"name": "Red Toadstool",
-	"description": "A poisonous fungus.",
-	"icon": "1627",
-	"weight": 0.1
+    "name": "Red Toadstool",
+    "description": "A poisonous fungus.",
+    "icon": "1627",
+    "weight": 0.1
   },
   "iron-key": {
-	"name": "Iron Key",
-	"description": "A small iron key.",
-	"icon": "759",
-	"weight": 0.1
+    "name": "Iron Key",
+    "description": "A small iron key.",
+    "icon": "759",
+    "weight": 0.1
   },
   "rusty-key": {
-	"name": "Rusty Key",
-	"description": "A rusty looking old key.",
-	"icon": "762",
-	"weight": 0.1
+    "name": "Rusty Key",
+    "description": "A rusty looking old key.",
+    "icon": "762",
+    "weight": 0.1
   },
   "skull-key": {
-	"name": "Skull Key",
-	"description": "A key shaped like a skull.",
-	"icon": "764",
-	"weight": 0.1
+    "name": "Skull Key",
+    "description": "A key shaped like a skull.",
+    "icon": "764",
+    "weight": 0.1
   },
   "torch": {
-	"name": "Torch",
-	"description": "A torch for lighting.",
-	"icon": "770",
-	"weight": 0.1,
-	"charge": 1.0,
-	"charge_decay_fn": "(1 - t*t) * 5"
+    "name": "Torch",
+    "description": "A torch for seeing the way.",
+    "icon": "770",
+    "weight": 0.1,
+    "charge": 1.0,
+    "charge_decay_fn": "1 - sqrt(t / 180)"
   }
 }
