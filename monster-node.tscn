@@ -1,0 +1,14 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://monsters/mon_skel.png" type="Texture" id=1]
+[ext_resource path="res://monster-node.gd" type="Script" id=2]
+
+[node name="monster" type="Spatial"]
+transform = Transform( 5, 0, 0, 0, 5, 0, 0, 0, 5, 0, 0, 0 )
+script = ExtResource( 2 )
+
+[node name="sprite" type="Sprite3D" parent="."]
+transform = Transform( 6, 0, 0, 0, 6, 0, 0, 0, 6, 0, 1, 0 )
+billboard = 1
+shaded = true
+texture = ExtResource( 1 )

@@ -2,7 +2,7 @@ extends Spatial
 
 const MAP_SCENE = preload("res://map.tscn")
 const PLAYER_SCENE = preload("res://player.tscn")
-const CURSOR_HAND = preload("res://hud/cursor-hand.png")
+const CURSOR_HAND = preload("res://hud/interact.png")
 
 var yaml_parser
 var player: Player
@@ -33,7 +33,9 @@ func start_level(file_name: String):
 	
 	Input.set_mouse_mode(Input.MOUSE_MODE_HIDDEN)
 	$cursor.texture = CURSOR_HAND
-
+	$"/root/main/cursor".offset.x = -3
+	$"/root/main/cursor".offset.y = -1
+	
 	var file = File.new()
 	if !file.file_exists(file_name): 
 		print("### FATAL! Could not load ", file_name, ", sorry!")
@@ -89,38 +91,3 @@ func hide_pause():
 
 func show_pause():
 	$pause_popup.show()
-
-func _on_inv_left_hand_gui_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			if player.in_hand != null:
-				if player.inventory[Player.LEFT_HAND] == null:
-					player.place_in_inventory(player.in_hand, Player.LEFT_HAND)
-					player.remove_held_item()
-				else:
-					var temp = player.inventory[Player.LEFT_HAND]
-					player.place_in_inventory(player.in_hand, Player.LEFT_HAND)
-					player.put_item_in_hand(temp)
-			else:
-				if player.inventory[Player.LEFT_HAND] != null: player.put_item_in_hand(player.inventory[Player.LEFT_HAND])
-				player.clear_inventory_slot(Player.LEFT_HAND)
-
-func _on_inv_right_hand_gui_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			if player.in_hand != null:
-				if player.inventory[Player.RIGHT_HAND] == null:
-					player.place_in_inventory(player.in_hand, Player.RIGHT_HAND)
-					player.remove_held_item()
-				else:
-					var temp = player.inventory[Player.RIGHT_HAND]
-					player.place_in_inventory(player.in_hand, Player.RIGHT_HAND)
-					player.put_item_in_hand(temp)
-			else:
-				if player.inventory[Player.RIGHT_HAND] != null: player.put_item_in_hand(player.inventory[Player.RIGHT_HAND])
-				player.clear_inventory_slot(Player.RIGHT_HAND)
-
-func _on_man_icon_gui_input(event):
-	if event is InputEventMouseButton:
-		if event.button_index == BUTTON_LEFT and event.pressed == true:
-			show_pause()

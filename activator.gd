@@ -81,7 +81,6 @@ func _activated():
 	emit_signal("activated")
 
 func _deactivated():
-	print("in_deactivated")
 	if not enabled: return
   
 	for action in actions[INACTIVE]:

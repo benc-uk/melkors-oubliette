@@ -17,6 +17,7 @@ var details = {
 }
 var door = null
 var is_pit = false
+var monster: Monster = null
 
 # For exits
 var is_exit = false
@@ -24,6 +25,14 @@ var exit_level = ""
 
 const DOOR = preload("res://details/door.tscn")
 const SPLAT = preload("res://details/splat.tscn")
+
+const COSMETICS = [
+	"wall/cosmetic/rubble",
+	"wall/cosmetic/pipe-hole",
+	"wall/cosmetic/crates",
+	"wall/cosmetic/bones",
+	"wall/cosmetic/wall-slime",
+]
 
 func _ready() -> void:	
 	player_can_pass = true
@@ -48,7 +57,11 @@ func add_item(item: Item, stack: String):
 	item_node.translation.z += (randf() * 2) - 1
 	get_node("floor/items_" + stack.to_lower()).add_child(item_node)
 
+#func add_monster(mon: Monster):
+#	pass
+	
 func open_pit():
+	for slot in range(3): remove_wall_detail(slot)
 	is_pit = true
 	player_can_pass = false
 	$floor.visible = false
@@ -61,12 +74,13 @@ func close_pit():
 	$pit.visible = false
 
 func set_as_exit(to_level: String, dir: int = global.COMPASS.NORTH):
+	for slot in range(3): remove_wall_detail(slot)
 	is_exit = true
 	exit_level = to_level
 	add_detail("exit", dir)
 	
 func add_detail(type: String, slot: int = global.COMPASS.NORTH):
-	if door || details[slot]:
+	if door || is_pit:
 		print("### Cell warning: Illegal placement of %s at %s,%s" % [name, x, y])
 		return
 		
@@ -74,11 +88,18 @@ func add_detail(type: String, slot: int = global.COMPASS.NORTH):
 	if !scene: 
 		print("### Cell warning: Detail with type '%s' doesn't exist. Skipping" % type)
 		return null
+		
+	# If anything here already overwrite it
+	remove_wall_detail(slot)
+		
+	# Add new detail
 	var detail = scene.instance()
 	details[slot] = detail
 	
 	if slot == CENTER:
 		player_can_pass = false
+		# Overwrite any wall details
+		for slot in range(3): remove_wall_detail(slot)
 	else:
 		detail.rotate_y(global.DIRECTIONS[slot])
 		
@@ -86,12 +107,15 @@ func add_detail(type: String, slot: int = global.COMPASS.NORTH):
 		
 	return detail
 
-func remove_center_detail():
-	if !details[CENTER]: return
 	
-	details[CENTER].queue_free()
+func remove_wall_detail(slot: int):
+	if !details[slot]: return
+	details[slot].queue_free()
+	details[slot] = null
+	
+func remove_center_detail():
+	remove_wall_detail(CENTER)
 	player_can_pass = true
-	details[CENTER] = null
 	
 func is_cell_adjacent(another_cell: Cell) -> bool:
 	if abs(another_cell.x - x) <= 1 && abs(another_cell.y - y) <= 1: return true
@@ -132,7 +156,11 @@ func play_sound(filename: String):
 	
 func to_string():
 	return "x: " + str(x) + ", y:" + str(y)
-	
+
+func add_cosmetic_detail(dir: int):
+	if door || is_pit: return
+	if randf() > 0.7: add_detail(COSMETICS[randi() % len(COSMETICS)], dir)
+
 func _floor_click_handler(camera, event, position, normal, shape_idx, floor_stack):
 	if event is InputEventMouseButton:
 		if event.button_index == BUTTON_LEFT and event.pressed == true:

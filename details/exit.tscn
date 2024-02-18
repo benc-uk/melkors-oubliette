@@ -17,7 +17,7 @@ albedo_color = Color( 0, 0, 0, 0.921569 )
 [node name="exit" type="Spatial"]
 
 [node name="exit-stair-up" parent="." instance=ExtResource( 2 )]
-transform = Transform( 0.153, 0, 0, 0, 0.153, 0, 0, 0, 0.22, 0, 4.89111, 0 )
+transform = Transform( -0.153, 0, -2.62268e-08, 0, 0.153, 0, 1.33757e-08, 0, -0.3, 0, 4.891, 5 )
 
 [node name="MeshInstance" type="MeshInstance" parent="exit-stair-up"]
 transform = Transform( 30.7913, 0, 0, 0, -1.27917e-06, -29.264, 0, 1, -4.37114e-08, 0, 0.882418, 16.2746 )

@@ -8,7 +8,7 @@
 [sub_resource type="SpatialMaterial" id=2]
 flags_transparent = true
 params_specular_mode = 4
-albedo_color = Color( 0.415686, 0.239216, 0.145098, 0.819608 )
+albedo_color = Color( 1, 1, 1, 0.486275 )
 albedo_texture = ExtResource( 2 )
 metallic_specular = 0.0
 
@@ -16,6 +16,6 @@ metallic_specular = 0.0
 script = ExtResource( 1 )
 
 [node name="mesh" type="MeshInstance" parent="."]
-transform = Transform( 3, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0.01, 0 )
+transform = Transform( 3, 0, 0, 0, 1, 0, 0, 0, 3, 0, 0.001, 0 )
 mesh = SubResource( 1 )
 material/0 = SubResource( 2 )

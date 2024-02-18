@@ -44,6 +44,16 @@ _global_script_classes=[ {
 "language": "GDScript",
 "path": "res://map.gd"
 }, {
+"base": "Object",
+"class": "Monster",
+"language": "GDScript",
+"path": "res://monster.gd"
+}, {
+"base": "Spatial",
+"class": "MonsterNode",
+"language": "GDScript",
+"path": "res://monster-node.gd"
+}, {
 "base": "Spatial",
 "class": "Player",
 "language": "GDScript",
@@ -62,6 +72,8 @@ _global_script_class_icons={
 "ItemContainer": "",
 "ItemNode": "",
 "Map": "",
+"Monster": "",
+"MonsterNode": "",
 "Player": "",
 "Splat": ""
 }
@@ -79,7 +91,7 @@ default_bus_layout="res://res/default_bus_layout.tres"
 
 [autoload]
 
-global="*res://global.tscn"
+global="*res://global.gd"
 
 [display]
 

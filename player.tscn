@@ -1,7 +1,31 @@
-[gd_scene load_steps=3 format=2]
+[gd_scene load_steps=14 format=2]
 
 [ext_resource path="res://player.gd" type="Script" id=1]
 [ext_resource path="res://sound/player_footstep01.wav" type="AudioStream" id=2]
+[ext_resource path="res://hud/frame.png" type="Texture" id=3]
+[ext_resource path="res://hud/disk.png" type="Texture" id=4]
+[ext_resource path="res://hud/inventory.png" type="Texture" id=5]
+[ext_resource path="res://hud/portraits/portrait-1.png" type="Texture" id=6]
+[ext_resource path="res://res/text_dynamicfont.tres" type="DynamicFont" id=7]
+[ext_resource path="res://hud/mouth.png" type="Texture" id=8]
+[ext_resource path="res://hud/eye.png" type="Texture" id=9]
+[ext_resource path="res://fonts/Goudy Mediaeval Regular.ttf" type="DynamicFontData" id=10]
+
+[sub_resource type="StyleBoxFlat" id=1]
+bg_color = Color( 0, 0, 0, 0.721569 )
+
+[sub_resource type="DynamicFont" id=3]
+size = 20
+outline_size = 2
+outline_color = Color( 0, 0, 0, 0.556863 )
+font_data = ExtResource( 10 )
+
+[sub_resource type="StyleBoxFlat" id=2]
+bg_color = Color( 0, 0, 0, 0.545098 )
+corner_radius_top_left = 9
+corner_radius_top_right = 9
+corner_radius_bottom_right = 9
+corner_radius_bottom_left = 9
 
 [node name="player" type="Spatial"]
 script = ExtResource( 1 )
@@ -33,3 +57,252 @@ omni_attenuation = 0.535888
 stream = ExtResource( 2 )
 unit_db = 16.134
 bus = "Reverb"
+
+[node name="main_inv" type="Control" parent="."]
+visible = false
+margin_left = 50.0
+margin_top = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="background" type="Panel" parent="main_inv"]
+margin_left = 6.0
+margin_top = 9.0
+margin_right = 713.0
+margin_bottom = 464.0
+custom_styles/panel = SubResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="border" type="NinePatchRect" parent="main_inv"]
+margin_right = 240.0
+margin_bottom = 157.0
+rect_scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="portrait_border" type="NinePatchRect" parent="main_inv"]
+margin_left = 26.0
+margin_top = 25.0
+margin_right = 62.0
+margin_bottom = 61.0
+rect_scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="portrait" type="Sprite" parent="main_inv/portrait_border"]
+scale = Vector2( 1.18, 1.18 )
+texture = ExtResource( 6 )
+centered = false
+offset = Vector2( 3, 3 )
+
+[node name="examine_border" type="NinePatchRect" parent="main_inv"]
+margin_left = 538.0
+margin_top = 24.0
+margin_right = 574.0
+margin_bottom = 60.0
+rect_scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ctrl_examine" type="Control" parent="main_inv/examine_border"]
+margin_left = 2.0
+margin_top = 2.0
+margin_right = 33.0
+margin_bottom = 33.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="main_inv/examine_border/ctrl_examine"]
+position = Vector2( -4.5, -4.5 )
+scale = Vector2( 1.85375, 1.85375 )
+texture = ExtResource( 9 )
+centered = false
+offset = Vector2( 3, 3 )
+
+[node name="examine_text_timer" type="Timer" parent="main_inv/examine_border/ctrl_examine/sprite"]
+wait_time = 5.0
+
+[node name="consume_border" type="NinePatchRect" parent="main_inv"]
+margin_left = 623.0
+margin_top = 24.0
+margin_right = 659.0
+margin_bottom = 60.0
+rect_scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="main_inv/consume_border"]
+position = Vector2( -2.5, -2.5 )
+scale = Vector2( 1.85375, 1.85375 )
+texture = ExtResource( 8 )
+centered = false
+offset = Vector2( 3, 3 )
+
+[node name="Label" type="Label" parent="main_inv"]
+margin_left = 147.0
+margin_top = 34.0
+margin_right = 187.0
+margin_bottom = 48.0
+custom_fonts/font = ExtResource( 7 )
+text = "Name: Troubleome Nigel
+Class: Rogue
+Hit points: 34"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="pack_label" type="Label" parent="main_inv"]
+margin_left = 32.0
+margin_top = 153.0
+margin_right = 78.0
+margin_bottom = 182.0
+custom_fonts/font = ExtResource( 7 )
+text = "Pack:"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="inspect_label" type="Label" parent="main_inv"]
+modulate = Color( 0.85098, 0.509804, 0.235294, 1 )
+margin_left = 318.0
+margin_top = 107.0
+margin_right = 707.0
+margin_bottom = 138.0
+custom_fonts/font = SubResource( 3 )
+align = 1
+valign = 1
+autowrap = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="hud" type="Control" parent="."]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="background" type="Panel" parent="hud"]
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = -230.0
+margin_top = -230.0
+margin_right = -11.0
+margin_bottom = -9.0
+custom_styles/panel = SubResource( 2 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="border" type="NinePatchRect" parent="hud"]
+margin_left = -236.0
+margin_top = -237.0
+margin_right = -160.0
+margin_bottom = -159.0
+rect_scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="man_border" type="NinePatchRect" parent="hud"]
+margin_left = -215.0
+margin_top = -113.75
+margin_right = -185.0
+margin_bottom = -83.75
+rect_scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ctrl_menu" type="Control" parent="hud/man_border"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 26.0
+margin_bottom = 26.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="hud/man_border/ctrl_menu"]
+position = Vector2( 1.33331, 0.916656 )
+scale = Vector2( 1.22917, 1.22917 )
+texture = ExtResource( 4 )
+centered = false
+
+[node name="inv_border" type="NinePatchRect" parent="hud"]
+margin_left = -118.75
+margin_top = -113.75
+margin_right = -88.75
+margin_bottom = -83.75
+rect_scale = Vector2( 3, 3 )
+texture = ExtResource( 3 )
+patch_margin_left = 5
+patch_margin_top = 5
+patch_margin_right = 5
+patch_margin_bottom = 5
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ctrl_inv" type="Control" parent="hud/inv_border"]
+margin_left = 4.0
+margin_top = 4.0
+margin_right = 26.0
+margin_bottom = 26.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="sprite" type="Sprite" parent="hud/inv_border/ctrl_inv"]
+position = Vector2( 10.9167, 10.5833 )
+scale = Vector2( 1.35417, 1.35417 )
+texture = ExtResource( 5 )
+
+[connection signal="gui_input" from="main_inv" to="." method="_on_main_inv_gui_input"]
+[connection signal="gui_input" from="main_inv/examine_border/ctrl_examine" to="." method="_on_ctrl_examine_gui_input"]
+[connection signal="timeout" from="main_inv/examine_border/ctrl_examine/sprite/examine_text_timer" to="." method="_on_examine_text_timer_timeout"]
+[connection signal="gui_input" from="hud/man_border/ctrl_menu" to="." method="_on_ctrl_menu_gui_input"]
+[connection signal="gui_input" from="hud/inv_border/ctrl_inv" to="." method="_on_ctrl_inv_gui_input"]

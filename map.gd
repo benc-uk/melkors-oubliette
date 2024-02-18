@@ -19,7 +19,7 @@ func _init():
 		for _x in range(width):
 			cells[y].append(null)
 			
-func add_cell(x: int, y: int) -> Cell:
+func add_cell(x: int, y: int, add_cosmetics = false) -> Cell:
 	if x > width - 1 or y > height - 1:
 		return null
 
@@ -89,13 +89,16 @@ func parse_level(level: Dictionary):
 		if map_line.substr(0,1) == "'": continue
 		for map_cell in map_line:
 			match map_cell:
+				# Open cells
 				"#", "O", "*", "0", "@": var _n = add_cell(x, y)
+				# Pits
 				"x", "X": 
 					var _n = add_cell(x, y)
 					get_cell(x, y).open_pit()
 			x = x + 1
 		y = y + 1
 	
+		
 	if level.has("doors"):
 		for door in level.doors:
 			var dir = global.str_to_compass(door.pos[2])
@@ -106,7 +109,15 @@ func parse_level(level: Dictionary):
 			if target_cell != null: target_cell.add_door(dir, type, open, buttons)
 			else:
 				print("### Parse error: Tried to add a door in a null cell: ",door.pos[0], ",", door.pos[1])
-
+				
+	# Add random cosmetic details
+	for cy in range(height):
+		for cx in range(width):
+			if cells[cx][cy] && !cells[cx + 1][cy]: cells[cx][cy].add_cosmetic_detail(global.COMPASS.EAST)
+			if cells[cx][cy] && !cells[cx - 1][cy]: cells[cx][cy].add_cosmetic_detail(global.COMPASS.WEST)
+			if cells[cx][cy] && !cells[cx][cy + 1]: cells[cx][cy].add_cosmetic_detail(global.COMPASS.SOUTH)
+			if cells[cx][cy] && !cells[cx][cy - 1]: cells[cx][cy].add_cosmetic_detail(global.COMPASS.NORTH)
+	
 	if level.has("details"):
 		for detail in level.details:
 			var cell = get_cell(detail.pos[0], detail.pos[1])
@@ -125,7 +136,7 @@ func parse_level(level: Dictionary):
 				if node.get_script() and node.is_container and detail.has("holds"):
 					for item in detail.holds:
 						node.add_new_item(item.id)
-						
+
 				if detail.has("states"):
 					if detail.states.has("activated"):
 						for action_cmd in detail.states.activated:
@@ -133,7 +144,7 @@ func parse_level(level: Dictionary):
 					if detail.states.has("deactivated"):
 						for action_cmd in detail.states.deactivated:
 							node._add_action(action_cmd, Activator.INACTIVE)
-							
+
 				if detail.has("message"): 
 					node.message = detail.message
 					node._add_action("main.show_message(message, 6)", Activator.ACTIVE)
@@ -147,8 +158,15 @@ func parse_level(level: Dictionary):
 			var cell = get_cell(item.pos[0], item.pos[1])
 			cell.add_item(item_object, item.pos[2])
 			
+	if level.has("monsters"):
+		for mon in level.monsters:
+			var m = Monster.new(mon.type)
+			var cell = get_cell(mon.pos[0], mon.pos[1])
+			cell.add_child(m.make_node())
+		
 	if level.has("exit"):
 		var exit_cell = get_cell(level.exit.pos[0], level.exit.pos[1])
 		exit_cell.set_as_exit(level.exit.to, global.str_to_compass(level.exit.pos[2]))
-		
+
 	emit_signal("map_parsed")
+

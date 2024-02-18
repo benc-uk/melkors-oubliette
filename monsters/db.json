@@ -1,0 +1,24 @@
+{
+  "skeleton": {
+    "sprite": "mon_skel",
+    "name": "Skeleton"
+  },
+  "rat": {
+    "sprite": "mon_rat",
+    "name": "Giant Rat",
+    "sprite_scale": 0.75
+  },
+  "ghost": {
+    "sprite": "mon_ghost",
+    "name": "Ghost",
+    "sprite_opacity": 0.5
+  },
+  "orc": {
+    "sprite": "mon_orc",
+    "name": "Orc Shaman"
+  },
+  "mummy": {
+    "sprite": "mon_mummy",
+    "name": "Mummy"
+  }
+}

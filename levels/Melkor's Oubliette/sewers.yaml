@@ -7,7 +7,7 @@ map: |
   OxOOOO
     O  O
     O   O
-   OOOOOOO
+   OOOOOOOO
    OOO   O
    OOOOOO
 
@@ -16,6 +16,14 @@ player_start:
 
 flags:
   flooded: true
+
+monsters:
+  - type: rat
+    pos: [0, 1, N]
+  - type: rat
+    pos: [2, 5, N]
+  - type: skeleton
+    pos: [8, 7, N]
 
 details:
   - type: wall/lever
@@ -41,12 +49,6 @@ details:
   - { type: wall/torch, pos: [2, 4, N] }
   - { type: wall/torch, pos: [3, 9, S] }
   - { type: wall/torch, pos: [0, 1, W] }
-  - { type: wall/rubble, pos: [0, 3, W] }
-  - { type: wall/rubble, pos: [5, 0, N] }
-  - { type: wall/pipe-hole, pos: [0, 0, N] }
-  - { type: wall/pipe-hole, pos: [0, 0, W] }
-  - { type: wall/pipe-hole, pos: [5, 4, E] }
-  - { type: wall/pipe-hole, pos: [5, 0, E] }
 
   - type: center/plinth
     pos: [2, 8, W]
@@ -56,11 +58,6 @@ details:
         - map.door(4, 9).open()
       deactivated:
         - map.door(4, 9).close()
-
-  - { type: wall/pipe-hole, pos: [1, 7, W] }
-  - { type: wall/pipe-hole, pos: [1, 8, W] }
-  - { type: wall/pipe-hole, pos: [1, 9, W] }
-  - { type: wall/rubble, pos: [5, 7, N] }
 
   - type: wall/sign
     pos: [6, 9, E]

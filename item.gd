@@ -18,6 +18,7 @@ var held_time = 0
 var charge_decay_expr = null
 
 const ITEM_NODE_SCENE = preload("res://item-node.tscn")
+const TORCH_ID = "torch"
 
 func _init(id: String):
 	if !global.item_db.has(id):

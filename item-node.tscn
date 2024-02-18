@@ -1,12 +1,21 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://item-node.gd" type="Script" id=1]
-[ext_resource path="res://items/2073.png" type="Texture" id=3]
+[ext_resource path="res://items/_placeholder.png" type="Texture" id=2]
+[ext_resource path="res://textures/item-shadow.png" type="Texture" id=3]
 
 [sub_resource type="SphereShape" id=4]
 
+[sub_resource type="PlaneMesh" id=7]
+
+[sub_resource type="SpatialMaterial" id=8]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0, 0, 0, 0.878431 )
+albedo_texture = ExtResource( 3 )
+
 [node name="item_node" type="Spatial"]
-transform = Transform( 8, 0, 0, 0, 8, 0, 0, 0, 8, 0, 1.1, 0 )
+transform = Transform( 16, 0, 0, 0, 16, 0, 0, 0, 16, 0, 1.1, 0 )
 script = ExtResource( 1 )
 
 [node name="sprite" type="Sprite3D" parent="."]
@@ -15,7 +24,7 @@ generate_lightmap = false
 modulate = Color( 0.882353, 0.882353, 0.882353, 1 )
 billboard = 1
 shaded = true
-texture = ExtResource( 3 )
+texture = ExtResource( 2 )
 
 [node name="click_area" type="Area" parent="."]
 transform = Transform( 0.1, 0, 0, 0, 0.1, 0, 0, 0, 0.1, 0, -0.0170307, 0 )
@@ -24,5 +33,10 @@ priority = 10.0
 [node name="shape" type="CollisionShape" parent="click_area"]
 transform = Transform( 1.4, 0, 0, 0, 1.4, 0, 0, 0, 1.4, 0, 0, 0 )
 shape = SubResource( 4 )
+
+[node name="shadow" type="MeshInstance" parent="."]
+transform = Transform( 0.12, 0, 0, 0, 0.12, 0, 0, 0, 0.12, 0, -0.0450724, 0 )
+mesh = SubResource( 7 )
+material/0 = SubResource( 8 )
 
 [connection signal="input_event" from="click_area" to="." method="click_handler"]

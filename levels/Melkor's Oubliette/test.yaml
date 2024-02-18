@@ -1,0 +1,8 @@
+name: Test
+map: |
+  OOO
+  OOO
+  OOO
+
+player_start:
+  pos: [0, 0, E]

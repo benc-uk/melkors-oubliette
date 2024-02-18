@@ -79,7 +79,7 @@ tracks/0/keys = {
 "values": [ Vector3( 0, 0, 1 ), Vector3( 0, 0, -2.5 ), Vector3( 0, 0, 1 ) ]
 }
 
-[node name="Spatial" type="Spatial"]
+[node name="door" type="Spatial"]
 script = ExtResource( 2 )
 
 [node name="door-frame-stone" parent="." instance=ExtResource( 5 )]

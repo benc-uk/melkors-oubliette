@@ -26,22 +26,24 @@ var elapsed: float
 
 # Inventory and pickup item hand
 var in_hand: Item = null
+const LEFT_HAND = "left_hand"
+const RIGHT_HAND = "right_hand"
 var inventory = {
 	LEFT_HAND: Item,
 	RIGHT_HAND: Item
 }
 
-const CURSOR_HAND = preload("res://hud/cursor-hand.png")
-const LEFT_HAND = "left_hand"
-const RIGHT_HAND = "right_hand"
+const CURSOR_HAND = preload("res://hud/interact.png")
+const HUD_ITEM_BOX_SCENE = preload("res://hud/item-box.tscn")
+
 const FOOT_SFX = [
 	"player_footstep01.wav",
 	"player_footstep02.wav",
 	"player_footstep03.wav",
 	"player_footstep04.wav"
 ]
+
 const GRUNT_SFX = "player_grunt.wav"
-const TORCH_ITEM_ID = "torch"
 
 func _init():
 	inventory[LEFT_HAND] = null
@@ -54,25 +56,42 @@ func _ready():
 	
 	light_level_noise = OpenSimplexNoise.new()
 	light_level_noise.seed = randi()
-	light_level_noise.octaves = 1
-	light_level_noise.period = 1.2
+	light_level_noise.octaves = 1; light_level_noise.period = 1.2
 	light_pos_noise = OpenSimplexNoise.new()
 	light_pos_noise.seed = randi()
-	light_pos_noise.octaves = 1
-	light_pos_noise.period = 0.5
+	light_pos_noise.octaves = 1; light_pos_noise.period = 0.5
 	# This is a increasing value used to "walk" the light_level_noise
 	elapsed = 0
+	
+	# Set up HUD
+	var inv_left_box = HUD_ITEM_BOX_SCENE.instance()
+	inv_left_box.slot = LEFT_HAND
+	inv_left_box.rect_position.x = -220; inv_left_box.rect_position.y = -220
+	$hud.add_child(inv_left_box)
+	var inv_right_box = HUD_ITEM_BOX_SCENE.instance()
+	inv_right_box.slot = RIGHT_HAND
+	inv_right_box.rect_position.x = -120; inv_right_box.rect_position.y = -220
+	$hud.add_child(inv_right_box)
+	for row in range(2):
+		for col in range(6):
+			var slot_num = (row * 6) + col 
+			inventory["main_" + str(slot_num)] = null
+			var box = HUD_ITEM_BOX_SCENE.instance()
+			box.slot = "main_" + str(slot_num)
+			box.rect_position.x = 20 + col * 115 ; box.rect_position.y = (row * 120) + 190
+			$main_inv.add_child(box)
+	$main_inv/portrait_border/portrait.texture = load("res://hud/portraits/portrait-"+str(randi()%4)+".png")
 
 func _process(delta):
 	# sub-function for input scanning
 	_process_input()
 	
 	# Handle torch in hand
-	if inventory[LEFT_HAND] != null and inventory[LEFT_HAND].item_id == TORCH_ITEM_ID:
+	if inventory[LEFT_HAND] != null and inventory[LEFT_HAND].item_id == Item.TORCH_ID:
 		inventory[LEFT_HAND].update_charge(delta)
 		light_level = inventory[LEFT_HAND].charge
 		if inventory[LEFT_HAND].charge <= 0: place_in_inventory(inventory[LEFT_HAND], LEFT_HAND)		
-	elif inventory[RIGHT_HAND] != null and inventory[RIGHT_HAND].item_id == TORCH_ITEM_ID:
+	elif inventory[RIGHT_HAND] != null and inventory[RIGHT_HAND].item_id == Item.TORCH_ID:
 		inventory[RIGHT_HAND].update_charge(delta)
 		light_level = inventory[RIGHT_HAND].charge
 		if inventory[RIGHT_HAND].charge <= 0: place_in_inventory(inventory[RIGHT_HAND], RIGHT_HAND)
@@ -109,67 +128,71 @@ func _process_input():
 	if !cell && map.get_cell(x, y):
 		cell = map.get_cell(x, y)
 		
-	if(Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_down")):
-		# To handle stepping forward and backward
+	if Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_down") || Input.is_action_pressed("step_left") || Input.is_action_pressed("step_right"):
+		# To handle stepping forward / backward & left / right
 		var dir = 1
-		if(Input.is_action_pressed("ui_down")):
-			dir = -1
-
-		var dest_cell = null
-		if facing == global.COMPASS.NORTH:
-			if cell: dest_cell = map.get_cell(cell.x, cell.y - dir)
-			if(!dest_cell || !dest_cell.player_can_pass) && !global.CHEAT_NOCLIP:
-				play_sfx(GRUNT_SFX, true)
-				return
-			y = y - dir
-			$mover.interpolate_property(self, "translation:z", translation.z, translation.z - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			
-		if facing == global.COMPASS.EAST:
-			if cell: dest_cell = map.get_cell(cell.x + dir, cell.y)
-			if(!dest_cell || !dest_cell.player_can_pass) && !global.CHEAT_NOCLIP:
-				play_sfx(GRUNT_SFX, true)
-				return
-			x = x + dir
-			$mover.interpolate_property(self, "translation:x", translation.x, translation.x + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			
-		if facing == global.COMPASS.SOUTH:
-			if cell: dest_cell = map.get_cell(cell.x, cell.y + dir)
-			if(!dest_cell || !dest_cell.player_can_pass) && !global.CHEAT_NOCLIP:
-				play_sfx(GRUNT_SFX, true)
-				return
-			y = y + dir
-			$mover.interpolate_property(self, "translation:z", translation.z, translation.z + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
-			
-		if facing == global.COMPASS.WEST:
-			if cell: dest_cell = map.get_cell(cell.x - dir, cell.y)
-			if(!dest_cell || !dest_cell.player_can_pass) && !global.CHEAT_NOCLIP:
-				play_sfx(GRUNT_SFX, true)
-				return
-			x = x - dir
-			$mover.interpolate_property(self, "translation:x", translation.x, translation.x - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+		if Input.is_action_pressed("ui_down"): dir = -1
+		if Input.is_action_pressed("ui_up"): dir = 1
+		if Input.is_action_pressed("step_left"): dir = -1
+		if Input.is_action_pressed("step_right"): dir = 1
 		
-		# Special stuff to handle level exits
-		if dest_cell && dest_cell.is_exit:
+		var moved = false
+		if Input.is_action_pressed("ui_up") || Input.is_action_pressed("ui_down"):
+			if facing == global.COMPASS.NORTH: moved = _move_north_south(dir)
+			if facing == global.COMPASS.EAST: moved = _move_east_west(dir)
+			if facing == global.COMPASS.SOUTH: moved = _move_north_south(-dir)
+			if facing == global.COMPASS.WEST: moved = _move_east_west(-dir)
+		if Input.is_action_pressed("step_left") || Input.is_action_pressed("step_right"):
+			if facing == global.COMPASS.NORTH: moved = _move_east_west(dir)
+			if facing == global.COMPASS.EAST: moved = _move_north_south(-dir)
+			if facing == global.COMPASS.SOUTH: moved = _move_east_west(-dir)
+			if facing == global.COMPASS.WEST: moved = _move_north_south(dir)
+		
+		if !moved: return
+		
+		# Special voodoo to handle level exits
+		if moved && cell && cell.is_exit:
 			$mover.remove_all()
 			# Need to reset this, it might not be a valid cell on the next level
 			global.CHEAT_START_POS = []
-			$"..".start_level(dest_cell.exit_level)
+			$"..".start_level(cell.exit_level)
 			return
 			
 		$mover.start()
 		play_sfx(FOOT_SFX[randi() % 4], true)
-		cell = dest_cell
 
-	if(Input.is_action_pressed("ui_left")):
+	if Input.is_action_pressed("ui_left"):
 		turn_left()
 		$mover.interpolate_property(self, "rotation:y", rotation.y, rotation.y+PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$mover.start()
 
-	if(Input.is_action_pressed("ui_right")):
+	if Input.is_action_pressed("ui_right"):
 		turn_right()
 		$mover.interpolate_property(self, "rotation:y", rotation.y, rotation.y-PI/2, TURN_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
 		$mover.start()
 
+func _move_north_south(dir: int) -> bool:
+	var dest_cell = null
+	if cell: dest_cell = map.get_cell(cell.x, cell.y - dir)
+	if(!dest_cell || !dest_cell.player_can_pass) && !global.CHEAT_NOCLIP:
+		play_sfx(GRUNT_SFX, true)
+		return false
+	y = y - dir
+	$mover.interpolate_property(self, "translation:z", translation.z, translation.z - global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)
+	cell = dest_cell
+	return true
+	
+func _move_east_west(dir: int) -> bool:
+	var dest_cell = null
+	if cell: dest_cell = map.get_cell(cell.x + dir, cell.y)
+	if(!dest_cell || !dest_cell.player_can_pass) && !global.CHEAT_NOCLIP:
+		play_sfx(GRUNT_SFX, true)
+		return false
+	x = x + dir
+	$mover.interpolate_property(self, "translation:x", translation.x, translation.x + global.CELL_SIZE * dir, MOVE_SPEED, Tween.TRANS_LINEAR, Tween.EASE_IN)	
+	cell = dest_cell
+	return true
+				
 func move_to(new_cell: Cell):
 	if !new_cell:
 		print("### Warning: Tried to move to a null cell")
@@ -211,30 +234,46 @@ func is_holding(id: String) -> bool:
 func remove_held_item():
 	in_hand = null
 	$"/root/main/cursor".texture = CURSOR_HAND
-	$"/root/main/cursor".offset.x = 0
-	$"/root/main/cursor".offset.y = 0
+	$"/root/main/cursor".offset.x = -3
+	$"/root/main/cursor".offset.y = -1
 	
 func put_item_in_hand(item):
 	if item == null: return
 	
 	in_hand = item
 	$"/root/main/cursor".texture = load("res://items/" + item.icon + ".png")
-	$"/root/main/cursor".offset.x = -16
-	$"/root/main/cursor".offset.y = -16
+	$"/root/main/cursor".offset.x = -8
+	$"/root/main/cursor".offset.y = -8
 
 func place_in_inventory(item: Item, slot: String):
 	inventory[slot] = item
-	var icon = item.icon
-	if item.item_id == TORCH_ITEM_ID && item.charge > 0:
-		icon += "_charged"
-	if slot == LEFT_HAND:
-		$"/root/main/hud/inv_left_hand/sprite".texture = load("res://items/" + icon + ".png")
-	if slot == RIGHT_HAND:
-		$"/root/main/hud/inv_right_hand/sprite".texture = load("res://items/" + icon + ".png")
-		
+	
 func clear_inventory_slot(slot: String):
 	inventory[slot] = null
-	if slot == LEFT_HAND:
-		$"/root/main/hud/inv_left_hand/sprite".texture = null
-	if slot == RIGHT_HAND:
-		$"/root/main/hud/inv_right_hand/sprite".texture = null
+
+func _on_ctrl_inv_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			$main_inv.visible = !$main_inv.visible
+			$"/root/main".hide_pause()
+			
+func _on_ctrl_examine_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			if !in_hand: return			
+			$main_inv/inspect_label.text = in_hand.description
+			$main_inv/examine_border/ctrl_examine/sprite/examine_text_timer.start()
+
+func _on_examine_text_timer_timeout():
+	$main_inv/inspect_label.text = ""
+
+func _on_ctrl_menu_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			$main_inv.visible = false
+			$"/root/main".show_pause()
+
+func _on_main_inv_gui_input(event):
+	if event is InputEventMouseButton:
+		if event.button_index == BUTTON_LEFT and event.pressed == true:
+			$main_inv.visible = false

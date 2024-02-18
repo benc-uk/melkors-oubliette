@@ -48,9 +48,10 @@ color_ramp = SubResource( 5 )
 script = ExtResource( 2 )
 
 [node name="light" type="OmniLight" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00624, -3.36091 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 8.00624, -2.30768 )
 light_color = Color( 0.976471, 0.745098, 0.419608, 1 )
-omni_range = 18.0
+shadow_enabled = true
+omni_range = 20.0
 omni_attenuation = 0.812252
 
 [node name="flame" type="Particles" parent="."]

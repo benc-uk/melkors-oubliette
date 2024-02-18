@@ -7,26 +7,27 @@
   },
   "potion": {
     "name": "Potion of Healing",
-    "description": "Heals the target for 50% of their maximum health.",
+    "description": "This smells like lavender, and seems like it would do you some good.",
     "icon": "2073",
     "weight": 0.3
   },
   "bread": {
     "name": "Bread",
-    "description": "A loaf of bread.",
+    "description": "A loaf of stale but edible bread.",
     "icon": "1738",
+    "edible": true,
     "weight": 0.2
   },
   "rock": {
     "name": "Rock",
     "description": "A medium sized rock.",
-    "icon": "1218",
+    "icon": "rock",
     "weight": 0.2
   },
   "sword": {
     "name": "Steel Sword",
-    "description": "A steel sword.",
-    "icon": "2281",
+    "description": "An iron sword, it's of OK quality.",
+    "icon": "2215",
     "weight": 2.0
   },
   "toadstool": {

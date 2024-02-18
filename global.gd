@@ -1,5 +1,7 @@
 extends Node
 
+const VERSION = "0.0.1-06-01-2021"
+
 # The size in world units of each map cell
 # YOU MUST NEVER CHANGE THIS
 const CELL_SIZE = 10
@@ -14,7 +16,9 @@ const DIRECTIONS = [0, -(PI/2), PI, +(PI/2)]
 
 # Holds all item templates
 var item_db: Dictionary
+var monster_db: Dictionary
 const ITEM_DB_PATH = "res://items/db.json"
+const MONSTER_DB_PATH = "res://monsters/db.json"
 const CHEATS_FILE_PATH = "user://cheats.json"
 
 # Debug cheats...
@@ -57,6 +61,15 @@ func _init():
 	if json_result.error != OK:
 		print("SEVERE! Unable to parse item db file. Line:", json_result.error_line, ": ", json_result.error_string)
 	item_db = json_result.result
+	
+	# Load the global monster DB json, used by monster.gd
+	if not file.file_exists(ITEM_DB_PATH):
+		print("SEVERE! Unable to locate monster db file: ", MONSTER_DB_PATH)
+	file.open(MONSTER_DB_PATH, File.READ)
+	json_result = JSON.parse(file.get_as_text())
+	if json_result.error != OK:
+		print("SEVERE! Unable to parse monster db file. Line:", json_result.error_line, ": ", json_result.error_string)
+	monster_db = json_result.result
 	
 	# Parse cheats file
 	if not file.file_exists(CHEATS_FILE_PATH): return

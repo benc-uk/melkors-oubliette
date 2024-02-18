@@ -1,4 +1,4 @@
-[gd_scene load_steps=26 format=2]
+[gd_scene load_steps=31 format=2]
 
 [ext_resource path="res://textures/sand.png" type="Texture" id=1]
 [ext_resource path="res://textures/floor-stone.png" type="Texture" id=2]
@@ -6,6 +6,8 @@
 [ext_resource path="res://textures/wall.png" type="Texture" id=4]
 [ext_resource path="res://textures/water 0342.jpg" type="Texture" id=5]
 [ext_resource path="res://textures/water 0342normal.jpg" type="Texture" id=6]
+[ext_resource path="res://textures/stone.png" type="Texture" id=7]
+[ext_resource path="res://textures/floor-dirt.png" type="Texture" id=8]
 
 [sub_resource type="PlaneMesh" id=1]
 size = Vector2( 10, 10 )
@@ -34,7 +36,9 @@ metallic_specular = 0.0
 size = Vector2( 10, 10 )
 
 [sub_resource type="SpatialMaterial" id=15]
-albedo_texture = ExtResource( 2 )
+albedo_texture = ExtResource( 7 )
+metallic_specular = 0.0
+roughness = 0.99
 
 [sub_resource type="PlaneMesh" id=16]
 
@@ -42,6 +46,23 @@ albedo_texture = ExtResource( 2 )
 flags_transparent = true
 albedo_color = Color( 0, 0, 0, 0.74902 )
 metallic_specular = 0.0
+
+[sub_resource type="QuadMesh" id=29]
+
+[sub_resource type="SpatialMaterial" id=30]
+flags_transparent = true
+params_cull_mode = 2
+albedo_color = Color( 0.792157, 0.164706, 0.0862745, 0.631373 )
+albedo_texture = ExtResource( 8 )
+
+[sub_resource type="GDScript" id=31]
+script/source = "extends MeshInstance
+
+func _ready():
+	rotate_z(randf() * 180)
+	if randf() >= 0.5:
+		translation.z *= -1
+"
 
 [sub_resource type="PlaneMesh" id=10]
 size = Vector2( 10, 10 )
@@ -71,7 +92,6 @@ roughness = 0.21
 normal_enabled = true
 normal_scale = -6.37
 normal_texture = ExtResource( 6 )
-uv1_offset = Vector3( 0.81831, 0.81831, 0.81831 )
 
 [sub_resource type="Animation" id=28]
 resource_name = "water-move"
@@ -171,9 +191,16 @@ mesh = SubResource( 16 )
 material/0 = SubResource( 17 )
 
 [node name="darken_pit" type="MeshInstance" parent="pit"]
-transform = Transform( 4.8, 0, 0, 4.2039e-44, 1, 0, 0, 0, 4.8, 3.22299e-44, 5.69125, -2.00308e-21 )
+transform = Transform( 4.8, 0, 0, 4.76441e-44, 1, 0, 0, 0, 4.8, 3.78351e-44, 5.99108, -2.10861e-21 )
 mesh = SubResource( 16 )
 material/0 = SubResource( 17 )
+
+[node name="blood" type="MeshInstance" parent="pit"]
+transform = Transform( 9, 1.4013e-44, 0, 1.4013e-44, 9, 0, 0, 0, 1, 0.166543, 0.867138, -4.41433 )
+cast_shadow = 0
+mesh = SubResource( 29 )
+material/0 = SubResource( 30 )
+script = SubResource( 31 )
 
 [node name="floor" type="MeshInstance" parent="."]
 cast_shadow = 0
@@ -223,13 +250,13 @@ mesh = SubResource( 12 )
 material/0 = SubResource( 13 )
 
 [node name="water" type="MeshInstance" parent="."]
-transform = Transform( 5, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0.87516, 0 )
+transform = Transform( 5, 0, 0, 0, 1, 0, 0, 0, 5, 0, 0.3, 0 )
 visible = false
 mesh = SubResource( 26 )
 skeleton = NodePath("")
 material/0 = SubResource( 27 )
 
-[node name="AnimationPlayer" type="AnimationPlayer" parent="water"]
+[node name="anim" type="AnimationPlayer" parent="water"]
 autoplay = "water-move"
 playback_speed = 0.15
 anims/water-move = SubResource( 28 )

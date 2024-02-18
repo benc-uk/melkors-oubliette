@@ -9,6 +9,8 @@ const MAIN_SCENE = preload("res://main.tscn")
 var fast_load = "res://levels/Melkor's Oubliette/sewers.yaml"
 
 func _ready():
+	$panel/version.text = global.VERSION
+	
 	# Create the custom level dir if it doesn't exist
 	var dir = Directory.new()
 	if not dir.dir_exists(CUSTOM_LEVEL_PATH):

@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=2]
+
+[ext_resource path="res://obj/crate.glb" type="PackedScene" id=1]
+
+[sub_resource type="GDScript" id=1]
+script/source = "extends Spatial
+
+func _ready():
+	#randomize()
+	rotate_y(randf()*360)
+	if randf() > 0.7: queue_free()
+"
+
+[node name="crate" type="Spatial"]
+
+[node name="crate" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.0997926, 0, 0.0160939, 0, 0.1, 0, -0.00643756, 0, 0.249481, 0, 0.979343, -4 )
+
+[node name="crate2" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.0151364, 0, 0.24712, 0, 0.1, 0, -0.0988478, 0, 0.0378411, 2.44631, 0.979343, -4 )
+
+[node name="crate3" parent="." instance=ExtResource( 1 )]
+transform = Transform( 0.0131267, 0, -0.197289, 0, 0.08, 0, 0.0789157, 0, 0.0328167, 1.05848, 2.9859, -3.87699 )
+script = SubResource( 1 )

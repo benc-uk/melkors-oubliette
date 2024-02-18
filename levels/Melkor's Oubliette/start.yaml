@@ -1,32 +1,61 @@
 name: The Oubliette
 map: |
-  O.OOO
-  O   O
-   O  O
-  OOOOOOOOO
+  OOOOOO  O  OO
+  O   OOOOOOOOO
+   O  O  x   O
+  OOOOOOOOO  OOOOO
+             OOOOO
 
 player_start:
   pos: [0, 0, N]
 
 exit:
-  pos: [8, 3, E]
+  pos: [8, 3, W]
   to: res://levels/Melkor's Oubliette/sewers.yaml
 
 doors:
-  - { pos: [6, 3, E] }
+  - { pos: [6, 3, E], open: true }
+  - { pos: [9, 1, E], type: 1 }
+
+monsters:
+  - type: mummy
+    pos: [15, 3, N]
+  - type: ghost
+    pos: [12, 4, N]
+  - type: rat
+    pos: [13, 4, N]
+  - type: orc
+    pos: [14, 4, N]
+  - type: skeleton
+    pos: [15, 4, N]
 
 details:
+  - { type: wall/torch, pos: [12, 3, N] }
+
   - type: wall/push-switch
     pos: [0, 1, S]
     states:
       activated:
-        - map.add_cell(1, 0)
+        - map.at(1, 0).remove_center_detail()
         - map.at(2, 0).play_sound("scraping-stone.wav")
+
+  - type: wall/lever
+    pos: [8, 0, N]
+    states:
+      activated:
+        - map.door(9, 1).open()
 
   - type: wall/shelf
     pos: [1, 2, N]
     holds:
+      - { id: bread }
+
+  - type: wall/shelf
+    pos: [12, 0, N]
+    holds:
       - { id: iron-key }
+  - type: wall/shelf
+    pos: [12, 0, E]
 
   - type: wall/keyhole
     pos: [5, 3, N]
@@ -41,10 +70,11 @@ details:
     pos: [0, 0, N]
     message: "You will never escape!\nYou will die down here in the oubliette!"
 
-  - { type: wall/pipe-hole, pos: [0, 0, W] }
-  - { type: wall/pipe-hole, pos: [0, 1, E] }
-  - { type: wall/crates, pos: [0, 3, N] }
-  - { type: wall/crates, pos: [2, 3, S] }
+  - { type: center/trick-wall, pos: [1, 0, W] }
+  - { type: center/stone-block, pos: [11, 0, W] }
+  - { type: wall/cosmetic/bones, pos: [0, 0, W] }
+  - { type: wall/cosmetic/wall-slime, pos: [0, 1, E] }
+  - { type: wall/cosmetic/pipe-hole, pos: [0, 1, W] }
 
 items:
   - { id: torch, pos: [0, 0, se] }
